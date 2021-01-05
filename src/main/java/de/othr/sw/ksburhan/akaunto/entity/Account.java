@@ -1,29 +1,46 @@
 package de.othr.sw.ksburhan.akaunto.entity;
 
+import javax.persistence.*;
 import java.util.Objects;
 
-//@Entity
+@Entity
+@Table(name = "accounts")
 public class Account {
-    //@Id @GeneratedValue
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false, unique = true, length = 20)
+    private String username;
+
+    @Column(nullable = false, length = 64)
+    private String password;
+
+    @Column(name = "first_name", nullable = false, length = 20)
     private String firstName;
+
+    @Column(name = "last_name", nullable = false, length = 20)
     private String lastName;
 
     public Account() {}
 
-    public Account(Long id, String firstName, String lastName) {
+    public Account(Long id, String username, String password, String firstName, String lastName) {
         this.id = id;
+        this.username = username;
+        this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
     }
 
     // Getter/Setter equals/hashCode toString compareTo
 
-
     @Override
     public String toString() {
         return "Account{" +
                 "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 '}';
@@ -48,6 +65,22 @@ public class Account {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getFirstName() {

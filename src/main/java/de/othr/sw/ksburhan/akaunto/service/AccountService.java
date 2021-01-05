@@ -1,21 +1,12 @@
 package de.othr.sw.ksburhan.akaunto.service;
 
 import de.othr.sw.ksburhan.akaunto.entity.Account;
-import org.springframework.stereotype.Service;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
-import java.util.List;
+public interface AccountService extends JpaRepository<Account, Long> {
 
-@Service
-public class AccountService {
+    @Query("SELECT u FROM Account u WHERE u.username = ?1")
+    public Account findByUsername(String username);
 
-    public List<Account> getAllAccounts() {
-
-        // Repo access
-        // Business logic
-
-        return List.of(
-                new Account(1L, "John", "Doe"),
-                new Account(2L, "Maria", "Muster")
-        );
-    }
 }
