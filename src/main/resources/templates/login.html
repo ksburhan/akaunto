@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Register new Account</title>
+    <title>Login - Akaunto</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
@@ -12,28 +12,16 @@
     <div class="row">
         <div class="col-md-8 mx-auto">
             <h2>Account Registration</h2>
-            <form th:action="@{/save}" th:object="${account}" method="post">
+            <form th:action="@{/login}" th:object="${account}" method="post">
                 <div class="form-row">
                     <div class="col-md-6 form-group">
                         <label>Username</label>
                         <input type="text" class="form-control" th:field="*{username}">
-                    </div>
-                    <div class="col-md-6 form-group">
                         <label>Password</label>
                         <input type="password" class="form-control" th:field="*{password}">
-                    </div>
-                    <div class="col-md-6 form-group">
-                        <label>First Name</label>
-                        <input type="text" class="form-control" th:field="*{firstName}">
-                    </div>
-                    <div class="col-md-6 form-group">
-                        <label>Last Name</label>
-                        <input type="text" class="form-control" th:field="*{lastName}">
-                    </div>
-                    <div class="col-md-6 form-group">
+                        <button type="submit" class="btn btn-primary btn-block mt-3">Login</button>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary btn-block mt-3">Submit</button>
             </form>
         </div>
     </div>

@@ -36,6 +36,12 @@ public class HomeController {
         return "registration_form";
     }
 
+    @PostMapping("/login")
+    public String showLoginPage(Model model) {
+        model.addAttribute("account", new Account());
+        return "login";
+    }
+
     @PostMapping("/process_register")
     public String register(Account account) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -45,5 +51,11 @@ public class HomeController {
         accountService.save(account);
 
         return "register_processed";
+    }
+
+    @RequestMapping("/home")
+    public String showHomescreen(Account account, Model model) {
+        model.addAttribute("account", account);
+        return "home";
     }
 }

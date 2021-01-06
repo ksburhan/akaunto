@@ -16,7 +16,7 @@ public class CustomAccountService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Account account = accountService.findByUsername(username);
         if (account == null) {
-            throw new UsernameNotFoundException("User not found");
+            throw new UsernameNotFoundException("Account not found");
         }
         return new CustomAccount(account);
     }
