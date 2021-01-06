@@ -32,8 +32,7 @@ public class TimelineServiceTests {
     @Test
     public void testPost() {
         Post post = new Post();
-        Account account = new Account("neguse", "123", "asd", "asd");
-        post.setAuthorID(account.getId());
+        post.setAuthorID(1L);
         post.setContent("hello akaunto");
         post.setCurrentDate();
 
