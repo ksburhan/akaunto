@@ -36,7 +36,7 @@ public class HomeController {
         return "registration_form";
     }
 
-    @PostMapping("/login")
+    @GetMapping("/login")
     public String showLoginPage(Model model) {
         model.addAttribute("account", new Account());
         return "login";
