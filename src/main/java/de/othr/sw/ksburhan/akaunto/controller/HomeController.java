@@ -10,10 +10,12 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Controller
@@ -64,7 +66,8 @@ public class HomeController {
     public String showHomescreen(@AuthenticationPrincipal CustomAccount customAccount, Model model) {
 
         Account account = accountService.findByUsername(customAccount.getUsername());
-        List<Post> allPosts = timelineService.findByAuthorID(account.getId());
+        List<Post> allPosts = timelineService.findAll();
+        allPosts.sort(Comparator.comparing(Post::getDate).reversed());
         model.addAttribute("allPosts", allPosts);
         model.addAttribute("account", account);
         model.addAttribute("post", new Post());
@@ -78,6 +81,30 @@ public class HomeController {
 
         timelineService.save(post);
 
-        return "home";
+        return "redirect:/home";
+    }
+
+    @RequestMapping("/u/{username}")
+    public String showUserPage(@AuthenticationPrincipal CustomAccount customAccount, Model model, @PathVariable String username) {
+        Account targetUser = accountService.findByUsername(username);
+
+        if(targetUser == null){
+            return "error";
+        }
+        model.addAttribute("targetUser", targetUser);
+
+        return "profile";
+    }
+
+    @RequestMapping("/p/{postID}")
+    public String showPostPage(@AuthenticationPrincipal CustomAccount customAccount, Model model, @PathVariable Long postID) {
+        Post targetPost = timelineService.findByPostID(postID);
+
+        if(targetPost == null){
+            return "error";
+        }
+        model.addAttribute("targetPost", targetPost);
+
+        return "post";
     }
 }

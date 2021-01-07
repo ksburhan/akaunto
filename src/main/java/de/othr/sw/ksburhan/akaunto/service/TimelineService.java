@@ -11,4 +11,10 @@ public interface TimelineService extends JpaRepository<Post, Long> {
     @Query("SELECT p FROM Post p WHERE p.authorID = ?1")
     public List<Post> findByAuthorID(Long authorId);
 
+    @Query("SELECT p FROM Post p WHERE p.id = ?1")
+    public Post findByPostID(Long postId);
+
+    @Query("SELECT p FROM Post p")
+    public List<Post> findAll();
+
 }
