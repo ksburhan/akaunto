@@ -19,7 +19,7 @@ import java.util.Comparator;
 import java.util.List;
 
 @Controller
-public class HomeController {
+public class TimelineController {
 
     @Autowired
     private AccountService accountService;
@@ -27,38 +27,25 @@ public class HomeController {
     @Autowired
     private TimelineService timelineService;
 
-    @GetMapping("/")
-    public String showStartPage(Model model) {
-        return "index";
+    @PostMapping("/post")
+    public String createNewPost(@AuthenticationPrincipal CustomAccount customAccount, Post post, Model model) {
+        post.setAuthorID(accountService.findByUsername(customAccount.getUsername()).getId());
+        post.setCurrentDate();
+
+        timelineService.save(post);
+
+        return "redirect:/home";
     }
 
-    @RequestMapping("/accounts")
-    public String prepareAccountPage(Model model) {
-        List<Account> allAccounts = accountService.findAll();
-        model.addAttribute("allAccounts", allAccounts);
-        return "accounts";
-    }
+    @RequestMapping("/p/{postID}")
+    public String showPostPage(@AuthenticationPrincipal CustomAccount customAccount, Model model, @PathVariable Long postID) {
+        Post targetPost = timelineService.findByPostID(postID);
 
-    @GetMapping("/register")
-    public String showRegistrationPage(Model model) {
-        model.addAttribute("account", new Account());
-        return "registration_form";
-    }
+        if(targetPost == null){
+            return "error";
+        }
+        model.addAttribute("targetPost", targetPost);
 
-    @GetMapping("/login")
-    public String showLoginPage(Model model) {
-        model.addAttribute("account", new Account());
-        return "login";
-    }
-
-    @PostMapping("/process_register")
-    public String register(Account account) {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String encodedPassword = passwordEncoder.encode(account.getPassword());
-        account.setPassword(encodedPassword);
-
-        accountService.save(account);
-
-        return "register_processed";
+        return "post";
     }
 }

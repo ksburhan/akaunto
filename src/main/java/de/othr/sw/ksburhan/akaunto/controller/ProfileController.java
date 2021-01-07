@@ -19,7 +19,7 @@ import java.util.Comparator;
 import java.util.List;
 
 @Controller
-public class HomeController {
+public class ProfileController {
 
     @Autowired
     private AccountService accountService;
@@ -27,38 +27,27 @@ public class HomeController {
     @Autowired
     private TimelineService timelineService;
 
-    @GetMapping("/")
-    public String showStartPage(Model model) {
-        return "index";
+    @RequestMapping("/home")
+    public String showHomescreen(@AuthenticationPrincipal CustomAccount customAccount, Model model) {
+
+        Account account = accountService.findByUsername(customAccount.getUsername());
+        List<Post> allPosts = timelineService.findAll();
+        allPosts.sort(Comparator.comparing(Post::getDate).reversed());
+        model.addAttribute("allPosts", allPosts);
+        model.addAttribute("account", account);
+        model.addAttribute("post", new Post());
+        return "home";
     }
 
-    @RequestMapping("/accounts")
-    public String prepareAccountPage(Model model) {
-        List<Account> allAccounts = accountService.findAll();
-        model.addAttribute("allAccounts", allAccounts);
-        return "accounts";
-    }
+    @RequestMapping("/u/{username}")
+    public String showUserPage(@AuthenticationPrincipal CustomAccount customAccount, Model model, @PathVariable String username) {
+        Account targetUser = accountService.findByUsername(username);
 
-    @GetMapping("/register")
-    public String showRegistrationPage(Model model) {
-        model.addAttribute("account", new Account());
-        return "registration_form";
-    }
+        if(targetUser == null){
+            return "error";
+        }
+        model.addAttribute("targetUser", targetUser);
 
-    @GetMapping("/login")
-    public String showLoginPage(Model model) {
-        model.addAttribute("account", new Account());
-        return "login";
-    }
-
-    @PostMapping("/process_register")
-    public String register(Account account) {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String encodedPassword = passwordEncoder.encode(account.getPassword());
-        account.setPassword(encodedPassword);
-
-        accountService.save(account);
-
-        return "register_processed";
+        return "profile";
     }
 }
