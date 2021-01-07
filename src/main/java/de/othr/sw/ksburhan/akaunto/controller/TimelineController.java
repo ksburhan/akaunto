@@ -27,6 +27,21 @@ public class TimelineController {
     @Autowired
     private TimelineService timelineService;
 
+    @RequestMapping("/home")
+    public String showHomescreen(@AuthenticationPrincipal CustomAccount customAccount, Model model) {
+
+        Account account = accountService.findByUsername(customAccount.getUsername());
+        List<Post> allPosts = timelineService.findAll();
+        for (Post post : allPosts) {
+            post.setAuthor(accountService.findByID(post.getAuthorID()));
+        }
+        allPosts.sort(Comparator.comparing(Post::getDate).reversed());
+        model.addAttribute("allPosts", allPosts);
+        model.addAttribute("account", account);
+        model.addAttribute("post", new Post());
+        return "home";
+    }
+
     @PostMapping("/post")
     public String createNewPost(@AuthenticationPrincipal CustomAccount customAccount, Post post, Model model) {
         post.setAuthorID(accountService.findByUsername(customAccount.getUsername()).getId());
@@ -40,6 +55,7 @@ public class TimelineController {
     @RequestMapping("/p/{postID}")
     public String showPostPage(@AuthenticationPrincipal CustomAccount customAccount, Model model, @PathVariable Long postID) {
         Post targetPost = timelineService.findByPostID(postID);
+        targetPost.setAuthor(accountService.findByID(targetPost.getAuthorID()));
 
         if(targetPost == null){
             return "error";

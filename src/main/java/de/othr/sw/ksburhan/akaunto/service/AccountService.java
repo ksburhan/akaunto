@@ -9,4 +9,7 @@ public interface AccountService extends JpaRepository<Account, Long> {
     @Query("SELECT u FROM Account u WHERE u.username = ?1")
     public Account findByUsername(String username);
 
+    @Query("SELECT u FROM Account u WHERE u.id = ?1")
+    public Account findByID(Long id);
+
 }

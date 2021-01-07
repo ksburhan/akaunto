@@ -17,7 +17,9 @@
             <form th:action="@{/post}" th:object="${post}"
                   method="post" style="max-width: 600px; margin: 0 auto;">
                 <div class="input-group mb-3">
-                    <input type="text" th:field="*{content}" class="form-control" placeholder="Say something" aria-label="Say something" aria-describedby="basic-addon2">
+                    <input type="text" th:field="*{content}" class="form-control" placeholder="Say something"
+                           aria-label="Say something" aria-describedby="basic-addon2"
+                           required minlength="3" maxlength="255">
                     <div class="input-group-append">
                         <button class="btn btn-outline-secondary" type="submit">Post</button>
                     </div>
@@ -30,6 +32,7 @@
                     <tr>
                         <th>Post ID</th>
                         <th>Author ID</th>
+                        <th>Author</th>
                         <th>Content</th>
                         <th>Date</th>
                     </tr>
@@ -37,7 +40,8 @@
                     <tbody>
                     <tr th:each="post: ${allPosts}">
                         <td th:text="${post.id}">ID</td>
-                        <td th:text="${post.authorID}">Username</td>
+                        <td th:text="${post.authorID}">Author ID</td>
+                        <td th:text="${post.author.username}">Username</td>
                         <td th:text="${post.content}">First Name</td>
                         <td th:text="${#dates.format(new java.util.Date(post.date))}">Date</td>
                     </tr>

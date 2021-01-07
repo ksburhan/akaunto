@@ -27,18 +27,6 @@ public class ProfileController {
     @Autowired
     private TimelineService timelineService;
 
-    @RequestMapping("/home")
-    public String showHomescreen(@AuthenticationPrincipal CustomAccount customAccount, Model model) {
-
-        Account account = accountService.findByUsername(customAccount.getUsername());
-        List<Post> allPosts = timelineService.findAll();
-        allPosts.sort(Comparator.comparing(Post::getDate).reversed());
-        model.addAttribute("allPosts", allPosts);
-        model.addAttribute("account", account);
-        model.addAttribute("post", new Post());
-        return "home";
-    }
-
     @RequestMapping("/u/{username}")
     public String showUserPage(@AuthenticationPrincipal CustomAccount customAccount, Model model, @PathVariable String username) {
         Account targetUser = accountService.findByUsername(username);

@@ -22,6 +22,9 @@ public class Post {
     @Column(nullable = false)
     private Long date;
 
+    @Transient
+    private Account author;
+
     public Post() {}
 
     public Post(Long id, Long authorID, String content) {
@@ -87,7 +90,16 @@ public class Post {
     public void setDate(Long date) {
         this.date = date;
     }
+
     public void setCurrentDate() {
         this.date = System.currentTimeMillis();
+    }
+
+    public Account getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(Account author) {
+        this.author = author;
     }
 }
