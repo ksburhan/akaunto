@@ -34,9 +34,9 @@ public class AccountServiceTests {
 
         Account savedUser = accountService.save(account);
 
-        Account existAccont = entityManager.find(Account.class, savedUser.getId());
+        Account existAccount = entityManager.find(Account.class, savedUser.getId());
 
-        assertThat(account.getUsername()).isEqualTo(existAccont.getUsername());
+        assertThat(account.getUsername()).isEqualTo(existAccount.getUsername());
 
     }
 }

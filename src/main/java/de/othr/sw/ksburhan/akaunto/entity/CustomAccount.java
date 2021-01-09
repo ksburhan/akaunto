@@ -18,6 +18,14 @@ public class CustomAccount implements UserDetails {
         return null;
     }
 
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
+
     @Override
     public String getPassword() {
         return account.getPassword();

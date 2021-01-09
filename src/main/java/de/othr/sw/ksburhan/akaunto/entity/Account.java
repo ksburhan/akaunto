@@ -1,8 +1,10 @@
 package de.othr.sw.ksburhan.akaunto.entity;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "accounts")
@@ -24,14 +26,20 @@ public class Account {
     @Column(name = "last_name", nullable = false, length = 20)
     private String lastName;
 
-    @OneToMany(mappedBy="to")
-    private List<Follower> followers;
+    @ManyToMany
+    @JoinTable(name = "account_relations",
+            joinColumns = @JoinColumn(name = "follow_id"),
+            inverseJoinColumns = @JoinColumn(name="follower_id"))
+    private Set<Account> followers;
 
-    @OneToMany(mappedBy="from")
-    private List<Follower> following;
+    @ManyToMany
+    @JoinTable(name = "account_relations",
+            joinColumns = @JoinColumn(name = "follower_id"),
+            inverseJoinColumns = @JoinColumn(name="follow_id"))
+    private Set<Account> following;
 
-    @OneToMany(mappedBy="author")
-    private List<Post> posts;
+    @OneToMany(mappedBy="author", cascade = CascadeType.MERGE)
+    private Set<Post> posts;
 
     public Account() {}
 
@@ -47,9 +55,7 @@ public class Account {
     @Override
     public String toString() {
         return "Account{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
+                "username='" + username + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 '}';
@@ -106,5 +112,30 @@ public class Account {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+
+    public Set<Account> getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(Set<Account> followers) {
+        this.followers = followers;
+    }
+
+    public Set<Account> getFollowing() {
+        return following;
+    }
+
+    public void setFollowing(Set<Account> following) {
+        this.following = following;
+    }
+
+    public Set<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(Set<Post> posts) {
+        this.posts = posts;
     }
 }

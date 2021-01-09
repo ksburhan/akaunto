@@ -40,7 +40,7 @@
                     <tbody>
                     <tr th:each="post: ${allPosts}">
                         <td th:text="${post.id}">ID</td>
-                        <td th:text="${post.authorID}">Author ID</td>
+                        <td th:text="${post.author}">Author ID</td>
                         <td th:text="${post.author.username}">Username</td>
                         <td th:text="${post.content}">First Name</td>
                         <td th:text="${#dates.format(new java.util.Date(post.date))}">Date</td>

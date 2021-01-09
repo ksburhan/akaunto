@@ -14,22 +14,18 @@ public class Post {
     private Long id;
 
     @Column(nullable = false)
-    private Long authorID;
-
-    @Column(nullable = false)
     private String content;
 
     @Column(nullable = false)
     private Long date;
 
-    @Transient
+    @ManyToOne
     private Account author;
 
     public Post() {}
 
-    public Post(Long id, Long authorID, String content) {
+    public Post(Long id, String content) {
         this.id = id;
-        this.authorID = authorID;
         this.content = content;
         this.date = System.currentTimeMillis();
     }
@@ -40,7 +36,6 @@ public class Post {
     public String toString() {
         return "Post{" +
                 "id=" + id +
-                ", authorID='" + authorID + '\'' +
                 ", content='" + content + '\'' +
                 ", date='" + date + '\'' +
                 '}';
@@ -65,14 +60,6 @@ public class Post {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getAuthorID() {
-        return authorID;
-    }
-
-    public void setAuthorID(Long authorID) {
-        this.authorID = authorID;
     }
 
     public String getContent() {
