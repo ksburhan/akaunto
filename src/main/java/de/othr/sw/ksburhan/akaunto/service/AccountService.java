@@ -10,6 +10,6 @@ public interface AccountService extends JpaRepository<Account, Long> {
     public Account findByUsername(String username);
 
     @Query("SELECT u FROM Account u WHERE u.id = ?1")
-    public Account findByID(Long id);
+    public Account findByID(long id);
 
 }

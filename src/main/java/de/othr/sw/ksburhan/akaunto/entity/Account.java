@@ -1,6 +1,7 @@
 package de.othr.sw.ksburhan.akaunto.entity;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -9,7 +10,7 @@ public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
     @Column(nullable = false, unique = true, length = 20)
     private String username;
@@ -22,6 +23,15 @@ public class Account {
 
     @Column(name = "last_name", nullable = false, length = 20)
     private String lastName;
+
+    @OneToMany(mappedBy="to")
+    private List<Follower> followers;
+
+    @OneToMany(mappedBy="from")
+    private List<Follower> following;
+
+    @OneToMany(mappedBy="author")
+    private List<Post> posts;
 
     public Account() {}
 
@@ -58,11 +68,11 @@ public class Account {
         return Objects.hash(id);
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 

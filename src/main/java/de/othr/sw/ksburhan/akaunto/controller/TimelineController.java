@@ -33,7 +33,7 @@ public class TimelineController {
         Account account = accountService.findByUsername(customAccount.getUsername());
         List<Post> allPosts = timelineService.findAll();
         for (Post post : allPosts) {
-            post.setAuthor(accountService.findByID(post.getAuthorID()));
+            post.setAuthor(accountService.findByID(post.getAuthor().getId()));
         }
         allPosts.sort(Comparator.comparing(Post::getDate).reversed());
         model.addAttribute("allPosts", allPosts);
@@ -44,7 +44,7 @@ public class TimelineController {
 
     @PostMapping("/post")
     public String createNewPost(@AuthenticationPrincipal CustomAccount customAccount, Post post, Model model) {
-        post.setAuthorID(accountService.findByUsername(customAccount.getUsername()).getId());
+        post.setAuthor(accountService.findByUsername(customAccount.getUsername()));
         post.setCurrentDate();
 
         timelineService.save(post);
@@ -53,13 +53,16 @@ public class TimelineController {
     }
 
     @RequestMapping("/p/{postID}")
-    public String showPostPage(@AuthenticationPrincipal CustomAccount customAccount, Model model, @PathVariable Long postID) {
+    public String showPostPage(@AuthenticationPrincipal CustomAccount customAccount, Model model, @PathVariable long postID) {
         Post targetPost = timelineService.findByPostID(postID);
-        targetPost.setAuthor(accountService.findByID(targetPost.getAuthorID()));
 
         if(targetPost == null){
             return "error";
         }
+
+        targetPost.setAuthor(accountService.findByID(targetPost.getAuthor().getId()));
+
+
         model.addAttribute("targetPost", targetPost);
 
         return "post";
