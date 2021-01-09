@@ -30,11 +30,15 @@ public class ProfileController {
     @RequestMapping("/u/{username}")
     public String showUserPage(@AuthenticationPrincipal CustomAccount customAccount, Model model, @PathVariable String username) {
         Account targetUser = accountService.findByUsername(username);
+        boolean isLoggedIn = false;
+        if(customAccount != null)
+            isLoggedIn = true;
 
-        if(targetUser == null){
+        if(targetUser == null)
             return "error";
-        }
+
         model.addAttribute("targetUser", targetUser);
+        model.addAttribute("isLoggedIn", isLoggedIn);
 
         return "profile";
     }

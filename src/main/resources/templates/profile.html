@@ -12,6 +12,9 @@
     <h1 th:text="${targetUser.username}"></h1>
     <h1 th:text="${targetUser.firstName}"></h1>
     <h1 th:text="${targetUser.lastName}"></h1>
+    <div th:unless="${isLoggedIn} == false">
+        <button type="submit" class="btn btn-primary">Follow</button>
+    </div>
 </div>
 </body>
 </html>
