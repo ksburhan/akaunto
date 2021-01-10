@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 public class TimelineController {
@@ -29,12 +31,13 @@ public class TimelineController {
     public String prepareHomescreen(@AuthenticationPrincipal CustomAccount customAccount, Model model) {
 
         Account account = accountService.findByUsername(customAccount.getUsername());
-        List<Post> allPosts = timelineService.findAll();
-        for (Post post : allPosts) {
-            post.setAuthor(accountService.findByID(post.getAuthor().getId()));
+        List<Post> allFollowedPosts = new ArrayList<>();
+        allFollowedPosts.addAll(account.getPosts());
+        for (Account followed : account.getFollowing()) {
+            allFollowedPosts.addAll(timelineService.findByAuthorID(followed));
         }
-        allPosts.sort(Comparator.comparing(Post::getDate).reversed());
-        model.addAttribute("allPosts", allPosts);
+        allFollowedPosts.sort(Comparator.comparing(Post::getDate).reversed());
+        model.addAttribute("allFollowedPosts", allFollowedPosts);
         model.addAttribute("account", account);
         model.addAttribute("post", new Post());
         return "home";
