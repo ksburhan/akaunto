@@ -40,14 +40,21 @@ public class HomeController {
     }
 
     @GetMapping("/register")
-    public String showRegistrationPage(Model model) {
+    public String prepareRegistrationPage(Model model) {
         model.addAttribute("account", new Account());
         return "registration_form";
     }
 
     @GetMapping("/login")
-    public String showLoginPage(Model model) {
+    public String prepareLoginPage(Model model) {
         model.addAttribute("account", new Account());
+        return "login";
+    }
+
+    @GetMapping("/login-error")
+    public String prepareErrorLoginPage(Model model) {
+        model.addAttribute("account", new Account());
+        model.addAttribute("loginError", true);
         return "login";
     }
 

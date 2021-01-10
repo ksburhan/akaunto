@@ -26,7 +26,7 @@ public class TimelineController {
     private TimelineService timelineService;
 
     @RequestMapping("/home")
-    public String showHomescreen(@AuthenticationPrincipal CustomAccount customAccount, Model model) {
+    public String prepareHomescreen(@AuthenticationPrincipal CustomAccount customAccount, Model model) {
 
         Account account = accountService.findByUsername(customAccount.getUsername());
         List<Post> allPosts = timelineService.findAll();
@@ -51,7 +51,7 @@ public class TimelineController {
     }
 
     @RequestMapping("/p/{postID}")
-    public String showPostPage(@AuthenticationPrincipal CustomAccount customAccount, Model model, @PathVariable long postID) {
+    public String preparePostPage(@AuthenticationPrincipal CustomAccount customAccount, Model model, @PathVariable long postID) {
         Post targetPost = timelineService.findByPostID(postID);
 
         if(targetPost == null){

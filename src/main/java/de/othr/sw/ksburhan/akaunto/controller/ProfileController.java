@@ -21,25 +21,25 @@ public class ProfileController {
     private TimelineService timelineService;
 
     @RequestMapping("/u/{username}")
-    public String showUserPage(@AuthenticationPrincipal CustomAccount customAccount, Model model, @PathVariable String username) {
+    public String prepareAccountPage(@AuthenticationPrincipal CustomAccount customAccount, Model model, @PathVariable String username) {
         Account targetAccount = accountService.findByUsername(username);
-
-        if(targetAccount == null)
-            return "error";
+        Account ownAccount = null;
 
         boolean isOwnProfile = false;
         boolean isLoggedIn = false;
         boolean isFollowing = false;
 
-        if(customAccount != null && targetAccount.getUsername().equals(customAccount.getUsername()))
-            isOwnProfile = true;
-        else if (customAccount != null) {
+        if(targetAccount == null)
+            return "error";
+
+        if(customAccount != null) {
             isLoggedIn = true;
-            if(false)
+            ownAccount = accountService.findByUsername(customAccount.getUsername());
+            if(targetAccount.equals(ownAccount))
+                isOwnProfile = true;
+            else if (ownAccount.getFollowing().contains(targetAccount))
                 isFollowing = true;
         }
-
-
 
         model.addAttribute("targetAccount", targetAccount);
         model.addAttribute("isLoggedIn", isLoggedIn);
@@ -49,17 +49,57 @@ public class ProfileController {
         return "profile";
     }
 
-    @RequestMapping("/follow")
-    public String followUser(@AuthenticationPrincipal CustomAccount customAccount, String username) {
+    @RequestMapping("/follow/{username}")
+    public String followUser(@AuthenticationPrincipal CustomAccount customAccount, @PathVariable String username) {
+        Account targetAccount = accountService.findByUsername(username);
+        Account ownAccount = null;
 
-        System.out.println("followed" + username);
+        if(customAccount == null)
+            return "redirect:/login";
+        if(targetAccount == null)
+            return "redirect:/home";
+
+        ownAccount = accountService.findByUsername(customAccount.getUsername());
+
+        if(ownAccount.getFollowing().contains(targetAccount))
+            return "redirect:/u/" + username;
+        else {
+            ownAccount.getFollowing().add(targetAccount);
+            //targetAccount.getFollowers().add(ownAccount);
+        }
+
+        accountService.save(ownAccount);
+        accountService.save(targetAccount);
+        accountService.flush();
+
+        System.out.println("followed " + username);
         return "redirect:/u/" + username;
     }
 
-    @RequestMapping("/unfollow")
-    public String unfollowUser(@AuthenticationPrincipal CustomAccount customAccount, String username) {
+    @RequestMapping("/unfollow/{username}")
+    public String unfollowUser(@AuthenticationPrincipal CustomAccount customAccount, @PathVariable String username) {
+        Account targetAccount = accountService.findByUsername(username);
+        Account ownAccount = null;
 
-        System.out.println("unfollowed");
+        if(customAccount == null)
+            return "redirect:/login";
+        if(targetAccount == null)
+            return "redirect:/home";
+
+        ownAccount = accountService.findByUsername(customAccount.getUsername());
+
+        if(!ownAccount.getFollowing().contains(targetAccount))
+            return "redirect:/u/" + username;
+        else {
+            ownAccount.getFollowing().remove(targetAccount);
+            //targetAccount.getFollowers().remove(ownAccount);
+        }
+
+        accountService.save(ownAccount);
+        accountService.save(targetAccount);
+        accountService.flush();
+
+        System.out.println("unfollowed " + username);
         return "redirect:/u/" + username;
     }
 }
