@@ -8,10 +8,20 @@
         <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
     </head>
     <body>
-        <div class="container text-center">
-            <h1>Welcome to Akaunto</h1>
-            <h3><a th:href="@{/register}">Register</a></h3>
-            <h3><a th:href="@{/login}">Login</a></h3>
-        </div>
+    <nav class="navbar navbar-expand-sm navbar-light" style="background-color: #e3f2fd;">
+        <a class="navbar-brand" th:href="@{/}">Akaunto</a>
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/register}">Register</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/login}">Log In</a>
+            </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search for users" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+    </nav>
     </body>
 </html>
