@@ -12,6 +12,8 @@
     <h1 th:text="${targetAccount.username}"></h1>
     <h1 th:text="${targetAccount.firstName}"></h1>
     <h1 th:text="${targetAccount.lastName}"></h1>
+    <h1 th:text="${targetAccount.followers.size()}"></h1>
+    <h1 th:text="${targetAccount.following.size()}"></h1>
     <div th:unless="${isLoggedIn} == false">
         <div th:unless="${isFollowing} == true">
             <form th:action="@{/follow/{path}(path=${targetAccount.username})}" method="post">
