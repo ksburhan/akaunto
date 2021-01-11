@@ -10,6 +10,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 @Controller
 public class ProfileController {
@@ -42,6 +46,7 @@ public class ProfileController {
         }
 
         model.addAttribute("targetAccount", targetAccount);
+        model.addAttribute("ownAccount", ownAccount);
         model.addAttribute("isLoggedIn", isLoggedIn);
         model.addAttribute("isOwnProfile", isOwnProfile);
         model.addAttribute("isFollowing", isFollowing);
@@ -65,7 +70,6 @@ public class ProfileController {
             return "redirect:/u/" + username;
         else {
             ownAccount.getFollowing().add(targetAccount);
-            //targetAccount.getFollowers().add(ownAccount);
         }
 
         accountService.save(ownAccount);
@@ -92,7 +96,6 @@ public class ProfileController {
             return "redirect:/u/" + username;
         else {
             ownAccount.getFollowing().remove(targetAccount);
-            //targetAccount.getFollowers().remove(ownAccount);
         }
 
         accountService.save(ownAccount);
@@ -101,5 +104,36 @@ public class ProfileController {
 
         System.out.println("unfollowed " + username);
         return "redirect:/u/" + username;
+    }
+
+    @RequestMapping(value = "/search", method = RequestMethod.GET)
+    public String prepareSearchPage(@AuthenticationPrincipal CustomAccount customAccount, Model model,
+                                    @RequestParam (value = "searchparam", required = false) String searchparam) {
+        List<Account> foundAccounts = accountService.search('%' + searchparam + '%');
+        Account ownAccount = null;
+        System.out.println(searchparam);
+
+        boolean isOwnProfile = false;
+        boolean isLoggedIn = false;
+        boolean isEmpty = false;
+
+        if(foundAccounts == null)
+            isEmpty = true;
+
+        if(customAccount != null) {
+            isLoggedIn = true;
+            ownAccount = accountService.findByUsername(customAccount.getUsername());
+            if(foundAccounts.contains(ownAccount))
+                isOwnProfile = true;
+        }
+
+        model.addAttribute("foundAccounts", foundAccounts);
+        model.addAttribute("searchparam", searchparam);
+        model.addAttribute("isLoggedIn", isLoggedIn);
+        model.addAttribute("ownAccount", ownAccount);
+        model.addAttribute("isOwnProfile", isOwnProfile);
+        model.addAttribute("isEmpty", isEmpty);
+
+        return "search";
     }
 }
