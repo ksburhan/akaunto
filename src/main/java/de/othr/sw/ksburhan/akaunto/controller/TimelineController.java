@@ -27,22 +27,6 @@ public class TimelineController {
     @Autowired
     private TimelineService timelineService;
 
-    @RequestMapping("/home")
-    public String prepareHomescreen(@AuthenticationPrincipal CustomAccount customAccount, Model model) {
-
-        Account account = accountService.findByUsername(customAccount.getUsername());
-        List<Post> allFollowedPosts = new ArrayList<>();
-        allFollowedPosts.addAll(account.getPosts());
-        for (Account followed : account.getFollowing()) {
-            allFollowedPosts.addAll(timelineService.findByAuthorID(followed));
-        }
-        allFollowedPosts.sort(Comparator.comparing(Post::getDate).reversed());
-        model.addAttribute("allFollowedPosts", allFollowedPosts);
-        model.addAttribute("account", account);
-        model.addAttribute("post", new Post());
-        return "home";
-    }
-
     @PostMapping("/post")
     public String createNewPost(@AuthenticationPrincipal CustomAccount customAccount, Post post, Model model) {
         post.setAuthor(accountService.findByUsername(customAccount.getUsername()));

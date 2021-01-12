@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -67,5 +68,21 @@ public class HomeController {
         accountService.save(account);
 
         return "register_processed";
+    }
+
+    @RequestMapping("/home")
+    public String prepareHomescreen(@AuthenticationPrincipal CustomAccount customAccount, Model model) {
+
+        Account account = accountService.findByUsername(customAccount.getUsername());
+        List<Post> allFollowedPosts = new ArrayList<>();
+        allFollowedPosts.addAll(account.getPosts());
+        for (Account followed : account.getFollowing()) {
+            allFollowedPosts.addAll(timelineService.findByAuthorID(followed));
+        }
+        allFollowedPosts.sort(Comparator.comparing(Post::getDate).reversed());
+        model.addAttribute("allFollowedPosts", allFollowedPosts);
+        model.addAttribute("account", account);
+        model.addAttribute("post", new Post());
+        return "home";
     }
 }

@@ -2,6 +2,7 @@ package de.othr.sw.ksburhan.akaunto.controller;
 
 import de.othr.sw.ksburhan.akaunto.entity.Account;
 import de.othr.sw.ksburhan.akaunto.entity.CustomAccount;
+import de.othr.sw.ksburhan.akaunto.entity.Post;
 import de.othr.sw.ksburhan.akaunto.service.AccountService;
 import de.othr.sw.ksburhan.akaunto.service.TimelineService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Controller
@@ -135,5 +138,13 @@ public class ProfileController {
         model.addAttribute("isEmpty", isEmpty);
 
         return "search";
+    }
+
+    @RequestMapping("/settings")
+    public String prepareHomescreen(@AuthenticationPrincipal CustomAccount customAccount, Model model) {
+
+        Account account = accountService.findByUsername(customAccount.getUsername());
+        model.addAttribute("account", account);
+        return "settings";
     }
 }
