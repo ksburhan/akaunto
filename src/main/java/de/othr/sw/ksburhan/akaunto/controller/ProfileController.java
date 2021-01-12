@@ -7,6 +7,7 @@ import de.othr.sw.ksburhan.akaunto.service.AccountService;
 import de.othr.sw.ksburhan.akaunto.service.TimelineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -141,10 +142,40 @@ public class ProfileController {
     }
 
     @RequestMapping("/settings")
-    public String prepareHomescreen(@AuthenticationPrincipal CustomAccount customAccount, Model model) {
+    public String prepareSettingscreen(@AuthenticationPrincipal CustomAccount customAccount, Model model) {
 
         Account account = accountService.findByUsername(customAccount.getUsername());
         model.addAttribute("account", account);
+        model.addAttribute("checkPassword", "");
+        return "settings";
+    }
+
+    @RequestMapping("/process_settingschange")
+    public String processSettingsChange(@AuthenticationPrincipal CustomAccount customAccount, Model model, Account account, @RequestParam String checkPassword) {
+
+        Account saveAccount = accountService.findByUsername(customAccount.getUsername());
+
+        System.out.println("old data" + saveAccount);
+
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+        if(!passwordEncoder.matches(checkPassword, saveAccount.getPassword())){
+            System.out.println("password does not match");
+            model.addAttribute("account", saveAccount);
+            model.addAttribute("passwordError", true);
+            return "settings";
+        }
+
+        saveAccount.setFirstName(account.getFirstName());
+        saveAccount.setLastName(account.getLastName());
+        saveAccount.setPassword(passwordEncoder.encode(account.getPassword()));
+
+        System.out.println("new data" + saveAccount);
+        accountService.save(saveAccount);
+
+        model.addAttribute("account", saveAccount);
+        model.addAttribute("checkPassword", "");
+        model.addAttribute("passwordSuccess", true);
         return "settings";
     }
 }

@@ -40,5 +40,43 @@
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
             </form>
         </nav>
+        <form th:action="@{/process_settingschange}" th:object="${account}"
+              method="post" style="max-width: 600px; margin: 0 auto;">
+            <div class="m-3">
+                <div class="form-group row">
+                    <label class="col-4 col-form-label" th:text="${'First Name: ' + account.firstName}">First Name: </label>
+                    <div class="col-8">
+                        <input type="text" th:field="*{firstName}" placeholder="New First Name" class="form-control"
+                               required minlength="2" maxlength="20"/>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-4 col-form-label" th:text="${'Last Name: ' + account.lastName}">Last Name: </label>
+                    <div class="col-8">
+                        <input type="text" th:field="*{lastName}" placeholder="New Last Name" class="form-control"
+                               required minlength="2" maxlength="20"/>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-4 col-form-label">New Password: </label>
+                    <div class="col-8">
+                        <input type="password" th:field="*{password}" placeholder="New password" class="form-control"
+                               required minlength="6" maxlength="30"/>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-4 col-form-label">Confirm old Password: </label>
+                    <div class="col-8">
+                        <input type="password" th:value="${checkPassword}" name="checkPassword" placeholder="Confirm old password" class="form-control"
+                               required minlength="6" maxlength="30"/>
+                    </div>
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-primary">Change</button>
+                </div>
+            </div>
+        </form>
+        <p th:if="${passwordError}" class="text-danger">Password does not match</p>
+        <p th:if="${passwordSuccess}" class="text-success">Password does not match</p>
     </body>
 </html>
