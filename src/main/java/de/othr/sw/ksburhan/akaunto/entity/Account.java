@@ -29,19 +29,20 @@ public class Account {
     @ManyToMany
     @JoinTable(name = "account_relations",
             joinColumns = @JoinColumn(name = "follow_id"),
-            inverseJoinColumns = @JoinColumn(name="follower_id"))
+            inverseJoinColumns = @JoinColumn(name = "follower_id"))
     private Set<Account> followers;
 
     @ManyToMany
     @JoinTable(name = "account_relations",
             joinColumns = @JoinColumn(name = "follower_id"),
-            inverseJoinColumns = @JoinColumn(name="follow_id"))
+            inverseJoinColumns = @JoinColumn(name = "follow_id"))
     private Set<Account> following;
 
-    @OneToMany(mappedBy="author", cascade = CascadeType.MERGE)
+    @OneToMany(mappedBy = "author", cascade = CascadeType.MERGE)
     private Set<Post> posts;
 
-    public Account() {}
+    public Account() {
+    }
 
     public Account(String username, String password, String firstName, String lastName) {
         this.username = username;

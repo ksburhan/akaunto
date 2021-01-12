@@ -37,13 +37,13 @@ public class ProfileController {
         boolean isLoggedIn = false;
         boolean isFollowing = false;
 
-        if(targetAccount == null)
+        if (targetAccount == null)
             return "error";
 
-        if(customAccount != null) {
+        if (customAccount != null) {
             isLoggedIn = true;
             ownAccount = accountService.findByUsername(customAccount.getUsername());
-            if(targetAccount.equals(ownAccount))
+            if (targetAccount.equals(ownAccount))
                 isOwnProfile = true;
             else if (ownAccount.getFollowing().contains(targetAccount))
                 isFollowing = true;
@@ -63,14 +63,14 @@ public class ProfileController {
         Account targetAccount = accountService.findByUsername(username);
         Account ownAccount = null;
 
-        if(customAccount == null)
+        if (customAccount == null)
             return "redirect:/login";
-        if(targetAccount == null)
+        if (targetAccount == null)
             return "redirect:/home";
 
         ownAccount = accountService.findByUsername(customAccount.getUsername());
 
-        if(ownAccount.getFollowing().contains(targetAccount))
+        if (ownAccount.getFollowing().contains(targetAccount))
             return "redirect:/u/" + username;
         else {
             ownAccount.getFollowing().add(targetAccount);
@@ -89,14 +89,14 @@ public class ProfileController {
         Account targetAccount = accountService.findByUsername(username);
         Account ownAccount = null;
 
-        if(customAccount == null)
+        if (customAccount == null)
             return "redirect:/login";
-        if(targetAccount == null)
+        if (targetAccount == null)
             return "redirect:/home";
 
         ownAccount = accountService.findByUsername(customAccount.getUsername());
 
-        if(!ownAccount.getFollowing().contains(targetAccount))
+        if (!ownAccount.getFollowing().contains(targetAccount))
             return "redirect:/u/" + username;
         else {
             ownAccount.getFollowing().remove(targetAccount);
@@ -112,7 +112,7 @@ public class ProfileController {
 
     @RequestMapping(value = "/search", method = RequestMethod.GET)
     public String prepareSearchPage(@AuthenticationPrincipal CustomAccount customAccount, Model model,
-                                    @RequestParam (value = "searchparam", required = false) String searchparam) {
+                                    @RequestParam(value = "searchparam", required = false) String searchparam) {
         List<Account> foundAccounts = accountService.search('%' + searchparam + '%');
         Account ownAccount = null;
         System.out.println(searchparam);
@@ -121,13 +121,13 @@ public class ProfileController {
         boolean isLoggedIn = false;
         boolean isEmpty = false;
 
-        if(foundAccounts == null)
+        if (foundAccounts == null)
             isEmpty = true;
 
-        if(customAccount != null) {
+        if (customAccount != null) {
             isLoggedIn = true;
             ownAccount = accountService.findByUsername(customAccount.getUsername());
-            if(foundAccounts.contains(ownAccount))
+            if (foundAccounts.contains(ownAccount))
                 isOwnProfile = true;
         }
 
@@ -159,7 +159,7 @@ public class ProfileController {
 
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-        if(!passwordEncoder.matches(checkPassword, saveAccount.getPassword())){
+        if (!passwordEncoder.matches(checkPassword, saveAccount.getPassword())) {
             System.out.println("password does not match");
             model.addAttribute("account", saveAccount);
             model.addAttribute("passwordError", true);

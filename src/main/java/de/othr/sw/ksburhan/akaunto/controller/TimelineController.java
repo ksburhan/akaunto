@@ -44,11 +44,11 @@ public class TimelineController {
 
         boolean isLoggedIn = false;
 
-        if(targetPost == null){
+        if (targetPost == null) {
             return "error";
         }
 
-        if(customAccount != null) {
+        if (customAccount != null) {
             isLoggedIn = true;
             ownAccount = accountService.findByUsername(customAccount.getUsername());
         }

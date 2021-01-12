@@ -22,7 +22,8 @@ public class Post {
     @ManyToOne
     private Account author;
 
-    public Post() {}
+    public Post() {
+    }
 
     public Post(Long id, String content) {
         this.id = id;

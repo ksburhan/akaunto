@@ -44,14 +44,16 @@
               method="post" style="max-width: 600px; margin: 0 auto;">
             <div class="m-3">
                 <div class="form-group row">
-                    <label class="col-4 col-form-label" th:text="${'First Name: ' + account.firstName}">First Name: </label>
+                    <label class="col-4 col-form-label" th:text="${'First Name: ' + account.firstName}">First
+                        Name: </label>
                     <div class="col-8">
                         <input type="text" th:field="*{firstName}" placeholder="New First Name" class="form-control"
                                required minlength="2" maxlength="20"/>
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-4 col-form-label" th:text="${'Last Name: ' + account.lastName}">Last Name: </label>
+                    <label class="col-4 col-form-label" th:text="${'Last Name: ' + account.lastName}">Last
+                        Name: </label>
                     <div class="col-8">
                         <input type="text" th:field="*{lastName}" placeholder="New Last Name" class="form-control"
                                required minlength="2" maxlength="20"/>
@@ -67,7 +69,8 @@
                 <div class="form-group row">
                     <label class="col-4 col-form-label">Confirm old Password: </label>
                     <div class="col-8">
-                        <input type="password" th:value="${checkPassword}" name="checkPassword" placeholder="Confirm old password" class="form-control"
+                        <input type="password" th:value="${checkPassword}" name="checkPassword"
+                               placeholder="Confirm old password" class="form-control"
                                required minlength="6" maxlength="30"/>
                     </div>
                 </div>
