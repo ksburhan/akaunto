@@ -70,10 +70,10 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="post: ${allFollowedPosts}">
-                        <td th:text="${post.id}">Post ID</td>
+                    <tr th:each="post: ${allFollowedPosts}" >
+                        <td><a th:text="${post.id}" th:href="@{/p/{path}(path=${post.id})}"></a></td>
                         <td th:text="${post.author}">Author</td>
-                        <td th:text="${post.author.username}">Username</td>
+                        <td><a th:text="${post.author.username}" th:href="@{/u/{path}(path=${post.author.username})}"></a></td>
                         <td th:text="${post.content}">Content</td>
                         <td th:text="${#dates.format(new java.util.Date(post.date))}">Date</td>
                     </tr>

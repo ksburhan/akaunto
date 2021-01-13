@@ -73,7 +73,7 @@
                 <tbody>
                 <tr th:each="account: ${foundAccounts}">
                     <td th:text="${account.id}">ID</td>
-                    <td th:text="${account.username}">Username</td>
+                    <td><a th:text="${account.username}" th:href="@{/u/{path}(path=${account.username})}"></a></td>
                     <td th:text="${account.firstName}">First Name</td>
                     <td th:text="${account.lastName}">Last Name</td>
                 </tr>

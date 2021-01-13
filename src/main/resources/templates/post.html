@@ -61,8 +61,8 @@
             </form>
         </nav>
         <div class="container text-center">
-            <h1 th:text="${targetPost.id}"></h1>
-            <h1 th:text="${targetPost.author.username}"></h1>
+            <h1 th:text="${targetPost.id}" th:href="@{/p/{path}(path=${targetPost.id})}"></h1>
+            <h1 th:text="${targetPost.author.username}" th:href="@{/u/{path}(path=${targetPost.author.id})}"></h1>
             <h1 th:text="${targetPost.content}"></h1>
             <h1 th:text="${targetPost.date}"></h1>
         </div>

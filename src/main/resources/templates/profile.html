@@ -95,7 +95,6 @@
                         <thead class="thead-dark">
                         <tr>
                             <th>Post ID</th>
-                            <th>Author</th>
                             <th>Username</th>
                             <th>Content</th>
                             <th>Date</th>
@@ -103,9 +102,8 @@
                         </thead>
                         <tbody>
                         <tr th:each="post: ${targetAccount.posts}">
-                            <td th:text="${post.id}">ID</td>
-                            <td th:text="${post.author}">Author</td>
-                            <td th:text="${post.author.username}">Username</td>
+                            <td><a th:href="@{/p/{path}(path=${post.id})}" th:text="${post.id}"></a></td>
+                            <td><a th:text="${post.author.username}" th:href="@{/u/{path}(path=${post.author.username})}"></a></td>
                             <td th:text="${post.content}">Content</td>
                             <td th:text="${#dates.format(new java.util.Date(post.date))}">Date</td>
                         </tr>
@@ -122,7 +120,7 @@
                         </thead>
                         <tbody>
                         <tr th:each="follower: ${targetAccount.getFollowers()}">
-                            <td th:text="${follower}">ID</td>
+                            <td><a th:text="${follower}" th:href="@{/u/{path}(path=${follower.username})}"></a></td>
                             <td th:text="${follower.getFollowers().size()}">Follower Count</td>
                         </tr>
                         </tbody>
@@ -138,7 +136,7 @@
                         </thead>
                         <tbody>
                         <tr th:each="follower: ${targetAccount.getFollowing()}">
-                            <td th:text="${follower}">ID</td>
+                            <td><a th:text="${follower}" th:href="@{/u/{path}(path=${follower.username})}"></a></td>
                             <td th:text="${follower.getFollowers().size()}">Follower Count</td>
                         </tr>
                         </tbody>
