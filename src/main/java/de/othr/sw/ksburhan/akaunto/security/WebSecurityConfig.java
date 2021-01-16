@@ -1,7 +1,8 @@
-package de.othr.sw.ksburhan.akaunto.service;
+package de.othr.sw.ksburhan.akaunto.security;
 
 import javax.sql.DataSource;
 
+import de.othr.sw.ksburhan.akaunto.service.CustomAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

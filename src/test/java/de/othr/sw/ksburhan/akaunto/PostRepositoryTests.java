@@ -2,10 +2,9 @@ package de.othr.sw.ksburhan.akaunto;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import de.othr.sw.ksburhan.akaunto.entity.Account;
 import de.othr.sw.ksburhan.akaunto.entity.Post;
-import de.othr.sw.ksburhan.akaunto.service.AccountService;
-import de.othr.sw.ksburhan.akaunto.service.TimelineService;
+import de.othr.sw.ksburhan.akaunto.repository.AccountRepository;
+import de.othr.sw.ksburhan.akaunto.repository.PostRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -17,16 +16,16 @@ import org.springframework.test.annotation.Rollback;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Rollback(false)
-public class TimelineServiceTests {
+public class PostRepositoryTests {
 
     @Autowired
     private TestEntityManager entityManager;
 
     @Autowired
-    private TimelineService timelineService;
+    private PostRepository postRepository;
 
     @Autowired
-    private AccountService accountService;
+    private AccountRepository accountRepository;
 
     // test methods go below
     @Test
@@ -35,7 +34,7 @@ public class TimelineServiceTests {
         post.setContent("hello akaunto");
         post.setCurrentDate();
 
-        Post savedPost = timelineService.save(post);
+        Post savedPost = postRepository.save(post);
 
         Post existPost = entityManager.find(Post.class, savedPost.getId());
 

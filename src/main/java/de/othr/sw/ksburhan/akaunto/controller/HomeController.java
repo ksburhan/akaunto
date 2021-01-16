@@ -3,14 +3,13 @@ package de.othr.sw.ksburhan.akaunto.controller;
 import de.othr.sw.ksburhan.akaunto.entity.Account;
 import de.othr.sw.ksburhan.akaunto.entity.CustomAccount;
 import de.othr.sw.ksburhan.akaunto.entity.Post;
-import de.othr.sw.ksburhan.akaunto.service.AccountService;
-import de.othr.sw.ksburhan.akaunto.service.TimelineService;
+import de.othr.sw.ksburhan.akaunto.repository.AccountRepository;
+import de.othr.sw.ksburhan.akaunto.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,10 +22,10 @@ import java.util.List;
 public class HomeController {
 
     @Autowired
-    private AccountService accountService;
+    private AccountRepository accountRepository;
 
     @Autowired
-    private TimelineService timelineService;
+    private PostRepository postRepository;
 
     @GetMapping("/")
     public String showStartPage(Model model) {
@@ -35,7 +34,7 @@ public class HomeController {
 
     @RequestMapping("/accounts")
     public String prepareAccountPage(Model model) {
-        List<Account> allAccounts = accountService.findAll();
+        List<Account> allAccounts = accountRepository.findAll();
         model.addAttribute("allAccounts", allAccounts);
         return "accounts";
     }
@@ -65,7 +64,7 @@ public class HomeController {
         String encodedPassword = passwordEncoder.encode(account.getPassword());
         account.setPassword(encodedPassword);
 
-        accountService.save(account);
+        accountRepository.save(account);
 
         return "register_processed";
     }
@@ -73,11 +72,11 @@ public class HomeController {
     @RequestMapping("/home")
     public String prepareHomescreen(@AuthenticationPrincipal CustomAccount customAccount, Model model) {
 
-        Account account = accountService.findByUsername(customAccount.getUsername());
+        Account account = accountRepository.findByUsername(customAccount.getUsername());
         List<Post> allFollowedPosts = new ArrayList<>();
         allFollowedPosts.addAll(account.getPosts());
         for (Account followed : account.getFollowing()) {
-            allFollowedPosts.addAll(timelineService.findByAuthorID(followed));
+            allFollowedPosts.addAll(postRepository.findByAuthorID(followed));
         }
         allFollowedPosts.sort(Comparator.comparing(Post::getDate).reversed());
         model.addAttribute("allFollowedPosts", allFollowedPosts);

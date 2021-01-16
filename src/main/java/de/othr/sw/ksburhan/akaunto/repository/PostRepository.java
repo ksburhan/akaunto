@@ -1,4 +1,4 @@
-package de.othr.sw.ksburhan.akaunto.service;
+package de.othr.sw.ksburhan.akaunto.repository;
 
 import de.othr.sw.ksburhan.akaunto.entity.Account;
 import de.othr.sw.ksburhan.akaunto.entity.Post;
@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface TimelineService extends JpaRepository<Post, Long> {
+public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query("SELECT p FROM Post p WHERE p.author = ?1")
     public List<Post> findByAuthorID(Account author);

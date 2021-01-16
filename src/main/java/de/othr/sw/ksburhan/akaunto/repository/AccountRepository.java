@@ -1,4 +1,4 @@
-package de.othr.sw.ksburhan.akaunto.service;
+package de.othr.sw.ksburhan.akaunto.repository;
 
 import de.othr.sw.ksburhan.akaunto.entity.Account;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface AccountService extends JpaRepository<Account, Long> {
+public interface AccountRepository extends JpaRepository<Account, Long> {
 
     @Query("SELECT u FROM Account u WHERE u.username = ?1")
     public Account findByUsername(String username);

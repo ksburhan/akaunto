@@ -3,7 +3,7 @@ package de.othr.sw.ksburhan.akaunto;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import de.othr.sw.ksburhan.akaunto.entity.Account;
-import de.othr.sw.ksburhan.akaunto.service.AccountService;
+import de.othr.sw.ksburhan.akaunto.repository.AccountRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -15,13 +15,13 @@ import org.springframework.test.annotation.Rollback;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Rollback(false)
-public class AccountServiceTests {
+public class AccountRepositoryTests {
 
     @Autowired
     private TestEntityManager entityManager;
 
     @Autowired
-    private AccountService accountService;
+    private AccountRepository accountRepository;
 
     // test methods go below
     @Test
@@ -32,7 +32,7 @@ public class AccountServiceTests {
         account.setFirstName("bur");
         account.setLastName("han");
 
-        Account savedUser = accountService.save(account);
+        Account savedUser = accountRepository.save(account);
 
         Account existAccount = entityManager.find(Account.class, savedUser.getId());
 
