@@ -81,5 +81,10 @@
                 </table>
             </div>
         </div>
+        <footer id="sticky-footer" class="py-4 bg-dark text-white-50 fixed-bottom">
+            <div class="container text-center">
+                <a th:href="@{/ad/{path}(path=${ad.id})}" th:text="${ad.getDescription()}"></a>
+            </div>
+        </footer>
     </body>
 </html>

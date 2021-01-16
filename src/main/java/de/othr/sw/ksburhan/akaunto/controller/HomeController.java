@@ -1,9 +1,11 @@
 package de.othr.sw.ksburhan.akaunto.controller;
 
 import de.othr.sw.ksburhan.akaunto.entity.Account;
+import de.othr.sw.ksburhan.akaunto.entity.Advertisement;
 import de.othr.sw.ksburhan.akaunto.entity.CustomAccount;
 import de.othr.sw.ksburhan.akaunto.entity.Post;
 import de.othr.sw.ksburhan.akaunto.repository.AccountRepository;
+import de.othr.sw.ksburhan.akaunto.repository.AdvertisementRepository;
 import de.othr.sw.ksburhan.akaunto.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -26,6 +28,9 @@ public class HomeController {
 
     @Autowired
     private PostRepository postRepository;
+
+    @Autowired
+    private AdvertisementRepository advertisementRepository;
 
     @GetMapping("/")
     public String showStartPage(Model model) {
@@ -79,8 +84,10 @@ public class HomeController {
             allFollowedPosts.addAll(postRepository.findByAuthorID(followed));
         }
         allFollowedPosts.sort(Comparator.comparing(Post::getDate).reversed());
+        Advertisement ad = advertisementRepository.findByAdID(2L);
         model.addAttribute("allFollowedPosts", allFollowedPosts);
         model.addAttribute("account", account);
+        model.addAttribute("ad", ad);
         model.addAttribute("post", new Post());
         return "home";
     }
