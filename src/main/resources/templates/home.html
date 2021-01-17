@@ -42,9 +42,6 @@
         </nav>
         <div class="container text-center">
             <h1>Welcome back <b>[[${#request.userPrincipal.principal.fullName}]]</b></h1>
-            <form th:action="@{/logout}" method="post">
-                <input type="submit" class="btn btn-primary" value="Sign Out"/>
-            </form>
 
             <form th:action="@{/post}" th:object="${post}"
                   method="post" style="max-width: 600px; margin: 0 auto;">
@@ -83,7 +80,9 @@
         </div>
         <footer id="sticky-footer" class="py-4 bg-dark text-white-50 fixed-bottom">
             <div class="container text-center">
-                <a th:href="@{/ad/{path}(path=${ad.id})}" th:text="${ad.getDescription()}"></a>
+                <a th:href="@{/ad/{path}(path=${ad.id})}">
+                    <img th:src="${ad.getPictureUrl()}" height="50" width="1000">
+                </a>
             </div>
         </footer>
     </body>

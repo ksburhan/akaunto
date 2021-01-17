@@ -17,17 +17,19 @@ public class Advertisement {
     private String url;
 
     @Column(nullable = false)
+    private String pictureUrl;
+
+    @Column(nullable = false)
     private String provider;
 
     @Column(nullable = false)
     private int clicks;
 
-    public Advertisement(Long id, String description, String url, String provider, int clicks) {
-        this.id = id;
+    public Advertisement(String description, String url, String pictureUrl, String provider) {
         this.description = description;
         this.url = url;
+        this.pictureUrl = pictureUrl;
         this.provider = provider;
-        this.clicks = clicks;
     }
 
     public Advertisement() {
@@ -56,6 +58,14 @@ public class Advertisement {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getPictureUrl() {
+        return pictureUrl;
+    }
+
+    public void setPictureUrl(String pictureUrl) {
+        this.pictureUrl = pictureUrl;
     }
 
     public String getProvider() {
