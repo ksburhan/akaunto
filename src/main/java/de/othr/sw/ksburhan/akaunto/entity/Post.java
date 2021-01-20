@@ -1,8 +1,6 @@
 package de.othr.sw.ksburhan.akaunto.entity;
 
 import javax.persistence.*;
-import java.sql.Date;
-import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity

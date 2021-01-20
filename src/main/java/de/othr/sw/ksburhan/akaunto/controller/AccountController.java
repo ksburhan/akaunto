@@ -20,28 +20,19 @@ public class AccountController {
        return accountService.findAll();
     }
 
-    @PostMapping("/registeraccount")
-    Account newAccount(@RequestBody Account newAccount) {
-        return accountService.save(newAccount);
+    @GetMapping("/registeraccount")
+    AccountDTO newAccount(@RequestParam String username, @RequestParam String firstName,
+                       @RequestParam String lastName, @RequestParam String password) {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        Account newAccount = new Account(username, password, firstName, lastName);
+        newAccount.setPassword(passwordEncoder.encode(newAccount.getPassword()));
+        accountService.save(newAccount);
+        return accountService.convertToDTO(newAccount);
     }
 
     @GetMapping("/account/{id}")
     Account one(@PathVariable long id) {
         return accountService.findById(id);
-    }
-
-    @PutMapping("/account/{id}")
-    Account replaceAccount(@RequestBody Account newAccount, @PathVariable Long id) {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String encodedPassword = passwordEncoder.encode(newAccount.getPassword());
-
-        Account account = accountService.findById(id);
-        account.setUsername(newAccount.getUsername());
-        account.setFirstName(newAccount.getFirstName());
-        account.setLastName(newAccount.getLastName());
-        account.setPassword(encodedPassword);
-
-        return accountService.save(account);
     }
 
     @DeleteMapping("/account/{id}")

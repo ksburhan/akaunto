@@ -1,9 +1,6 @@
 package de.othr.sw.ksburhan.akaunto.controller;
 
-import de.othr.sw.ksburhan.akaunto.entity.Account;
-import de.othr.sw.ksburhan.akaunto.entity.Advertisement;
-import de.othr.sw.ksburhan.akaunto.entity.CustomAccount;
-import de.othr.sw.ksburhan.akaunto.entity.Post;
+import de.othr.sw.ksburhan.akaunto.entity.*;
 import de.othr.sw.ksburhan.akaunto.service.AccountService;
 import de.othr.sw.ksburhan.akaunto.service.AdvertisementService;
 import de.othr.sw.ksburhan.akaunto.service.PostService;
@@ -16,8 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 @Controller
@@ -68,6 +63,7 @@ public class HomeController {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String encodedPassword = passwordEncoder.encode(account.getPassword());
         account.setPassword(encodedPassword);
+        account.setAccountData(new AccountData(account));
 
         accountService.save(account);
 

@@ -2,8 +2,6 @@ package de.othr.sw.ksburhan.akaunto.controller;
 
 import de.othr.sw.ksburhan.akaunto.entity.Account;
 import de.othr.sw.ksburhan.akaunto.entity.CustomAccount;
-import de.othr.sw.ksburhan.akaunto.repository.AccountRepository;
-import de.othr.sw.ksburhan.akaunto.repository.PostRepository;
 import de.othr.sw.ksburhan.akaunto.service.AccountService;
 import de.othr.sw.ksburhan.akaunto.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,7 +77,6 @@ public class ProfileController {
         accountService.save(targetAccount);
         accountService.flush();
 
-        System.out.println("followed " + username);
         return "redirect:/u/" + username;
     }
 
@@ -105,7 +102,6 @@ public class ProfileController {
         accountService.save(targetAccount);
         accountService.flush();
 
-        System.out.println("unfollowed " + username);
         return "redirect:/u/" + username;
     }
 

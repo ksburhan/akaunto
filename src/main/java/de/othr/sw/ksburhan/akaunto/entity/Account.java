@@ -1,8 +1,6 @@
 package de.othr.sw.ksburhan.akaunto.entity;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -25,6 +23,10 @@ public class Account {
 
     @Column(name = "last_name", nullable = false, length = 20)
     private String lastName;
+
+    @OneToOne(fetch = FetchType.LAZY,
+    cascade = CascadeType.ALL, mappedBy = "account")
+    private AccountData accountData;
 
     @ManyToMany
     @JoinTable(name = "account_relations",
@@ -142,5 +144,13 @@ public class Account {
 
     public String getFullName(){
         return firstName + " " + lastName;
+    }
+
+    public AccountData getAccountData() {
+        return accountData;
+    }
+
+    public void setAccountData(AccountData accountData) {
+        this.accountData = accountData;
     }
 }

@@ -13,10 +13,14 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private static final String[] AUTHENTICATION_NEEDED = {
+            "/home", "/settings", "/follow/**", "/unfollow/**"  };
 
     @Autowired
     private DataSource dataSource;
@@ -49,7 +53,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                    .antMatchers("/home").authenticated()
+                    .antMatchers(AUTHENTICATION_NEEDED).authenticated()
                     .anyRequest().permitAll()
                     .and()
                 .formLogin()
@@ -63,7 +67,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .logoutSuccessUrl("/")
                     .permitAll()
                     .and()
-                .httpBasic();
+                .addFilterBefore(new LoginPageFilter(), DefaultLoginPageGeneratingFilter.class);
     }
 
 

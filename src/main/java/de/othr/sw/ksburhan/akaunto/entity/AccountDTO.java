@@ -1,6 +1,5 @@
 package de.othr.sw.ksburhan.akaunto.entity;
 
-
 public class AccountDTO {
 
     private String username;

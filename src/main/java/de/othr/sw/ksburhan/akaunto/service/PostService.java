@@ -2,13 +2,12 @@ package de.othr.sw.ksburhan.akaunto.service;
 
 import de.othr.sw.ksburhan.akaunto.entity.Account;
 import de.othr.sw.ksburhan.akaunto.entity.Post;
-import de.othr.sw.ksburhan.akaunto.repository.AccountRepository;
 import de.othr.sw.ksburhan.akaunto.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 
@@ -26,6 +25,7 @@ public class PostService {
         return postRepository.findByAuthorID(followed);
     }
 
+    @Transactional
     public void save(Post post) {
         postRepository.save(post);
     }

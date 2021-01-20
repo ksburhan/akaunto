@@ -5,6 +5,7 @@ import de.othr.sw.ksburhan.akaunto.entity.AccountDTO;
 import de.othr.sw.ksburhan.akaunto.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -26,10 +27,12 @@ public class AccountService {
         return accountRepository.findByID(id);
     }
 
+    @Transactional
     public Account save(Account account) {
         return accountRepository.save(account);
     }
 
+    @Transactional
     public void deleteById(Long id) {
         accountRepository.deleteById(id);
     }
@@ -38,6 +41,7 @@ public class AccountService {
         return accountRepository.findByUsername(username);
     }
 
+    @Transactional
     public void flush() {
         accountRepository.flush();
     }
