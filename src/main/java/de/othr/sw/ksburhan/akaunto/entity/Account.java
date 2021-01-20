@@ -139,4 +139,8 @@ public class Account {
     public void setPosts(Set<Post> posts) {
         this.posts = posts;
     }
+
+    public String getFullName(){
+        return firstName + " " + lastName;
+    }
 }

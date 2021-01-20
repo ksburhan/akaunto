@@ -4,6 +4,8 @@ import de.othr.sw.ksburhan.akaunto.entity.Account;
 import de.othr.sw.ksburhan.akaunto.entity.CustomAccount;
 import de.othr.sw.ksburhan.akaunto.repository.AccountRepository;
 import de.othr.sw.ksburhan.akaunto.repository.PostRepository;
+import de.othr.sw.ksburhan.akaunto.service.AccountService;
+import de.othr.sw.ksburhan.akaunto.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -20,14 +22,14 @@ import java.util.List;
 public class ProfileController {
 
     @Autowired
-    private AccountRepository accountRepository;
+    private AccountService accountService;
 
     @Autowired
-    private PostRepository postRepository;
+    private PostService postService;
 
     @RequestMapping("/u/{username}")
     public String prepareAccountPage(@AuthenticationPrincipal CustomAccount customAccount, Model model, @PathVariable String username) {
-        Account targetAccount = accountRepository.findByUsername(username);
+        Account targetAccount = accountService.findByUsername(username);
         Account ownAccount = null;
 
         boolean isOwnProfile = false;
@@ -39,7 +41,7 @@ public class ProfileController {
 
         if (customAccount != null) {
             isLoggedIn = true;
-            ownAccount = accountRepository.findByUsername(customAccount.getUsername());
+            ownAccount = accountService.findByUsername(customAccount.getUsername());
             if (targetAccount.equals(ownAccount))
                 isOwnProfile = true;
             else if (ownAccount.getFollowing().contains(targetAccount))
@@ -57,7 +59,7 @@ public class ProfileController {
 
     @RequestMapping("/follow/{username}")
     public String followUser(@AuthenticationPrincipal CustomAccount customAccount, @PathVariable String username) {
-        Account targetAccount = accountRepository.findByUsername(username);
+        Account targetAccount = accountService.findByUsername(username);
         Account ownAccount = null;
 
         if (customAccount == null)
@@ -65,7 +67,7 @@ public class ProfileController {
         if (targetAccount == null)
             return "redirect:/home";
 
-        ownAccount = accountRepository.findByUsername(customAccount.getUsername());
+        ownAccount = accountService.findByUsername(customAccount.getUsername());
 
         if (ownAccount.getFollowing().contains(targetAccount))
             return "redirect:/u/" + username;
@@ -73,9 +75,9 @@ public class ProfileController {
             ownAccount.getFollowing().add(targetAccount);
         }
 
-        accountRepository.save(ownAccount);
-        accountRepository.save(targetAccount);
-        accountRepository.flush();
+        accountService.save(ownAccount);
+        accountService.save(targetAccount);
+        accountService.flush();
 
         System.out.println("followed " + username);
         return "redirect:/u/" + username;
@@ -83,7 +85,7 @@ public class ProfileController {
 
     @RequestMapping("/unfollow/{username}")
     public String unfollowUser(@AuthenticationPrincipal CustomAccount customAccount, @PathVariable String username) {
-        Account targetAccount = accountRepository.findByUsername(username);
+        Account targetAccount = accountService.findByUsername(username);
         Account ownAccount = null;
 
         if (customAccount == null)
@@ -91,7 +93,7 @@ public class ProfileController {
         if (targetAccount == null)
             return "redirect:/home";
 
-        ownAccount = accountRepository.findByUsername(customAccount.getUsername());
+        ownAccount = accountService.findByUsername(customAccount.getUsername());
 
         if (!ownAccount.getFollowing().contains(targetAccount))
             return "redirect:/u/" + username;
@@ -99,9 +101,9 @@ public class ProfileController {
             ownAccount.getFollowing().remove(targetAccount);
         }
 
-        accountRepository.save(ownAccount);
-        accountRepository.save(targetAccount);
-        accountRepository.flush();
+        accountService.save(ownAccount);
+        accountService.save(targetAccount);
+        accountService.flush();
 
         System.out.println("unfollowed " + username);
         return "redirect:/u/" + username;
@@ -110,9 +112,8 @@ public class ProfileController {
     @RequestMapping(value = "/search", method = RequestMethod.GET)
     public String prepareSearchPage(@AuthenticationPrincipal CustomAccount customAccount, Model model,
                                     @RequestParam(value = "searchparam", required = false) String searchparam) {
-        List<Account> foundAccounts = accountRepository.search('%' + searchparam + '%');
+        List<Account> foundAccounts = accountService.search('%' + searchparam + '%');
         Account ownAccount = null;
-        System.out.println(searchparam);
 
         boolean isOwnProfile = false;
         boolean isLoggedIn = false;
@@ -123,7 +124,7 @@ public class ProfileController {
 
         if (customAccount != null) {
             isLoggedIn = true;
-            ownAccount = accountRepository.findByUsername(customAccount.getUsername());
+            ownAccount = accountService.findByUsername(customAccount.getUsername());
             if (foundAccounts.contains(ownAccount))
                 isOwnProfile = true;
         }
@@ -140,8 +141,7 @@ public class ProfileController {
 
     @RequestMapping("/settings")
     public String prepareSettingscreen(@AuthenticationPrincipal CustomAccount customAccount, Model model) {
-
-        Account account = accountRepository.findByUsername(customAccount.getUsername());
+        Account account = accountService.findByUsername(customAccount.getUsername());
         model.addAttribute("account", account);
         model.addAttribute("checkPassword", "");
         return "settings";
@@ -150,7 +150,7 @@ public class ProfileController {
     @RequestMapping("/process_settingschange")
     public String processSettingsChange(@AuthenticationPrincipal CustomAccount customAccount, Model model, Account account, @RequestParam String checkPassword) {
 
-        Account saveAccount = accountRepository.findByUsername(customAccount.getUsername());
+        Account saveAccount = accountService.findByUsername(customAccount.getUsername());
 
         System.out.println("old data" + saveAccount);
 
@@ -167,8 +167,7 @@ public class ProfileController {
         saveAccount.setLastName(account.getLastName());
         saveAccount.setPassword(passwordEncoder.encode(account.getPassword()));
 
-        System.out.println("new data" + saveAccount);
-        accountRepository.save(saveAccount);
+        accountService.save(saveAccount);
 
         model.addAttribute("account", saveAccount);
         model.addAttribute("checkPassword", "");

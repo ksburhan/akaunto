@@ -1,12 +1,10 @@
 package de.othr.sw.ksburhan.akaunto.controller;
 
 import de.othr.sw.ksburhan.akaunto.entity.Account;
-import de.othr.sw.ksburhan.akaunto.entity.CustomAccount;
-import de.othr.sw.ksburhan.akaunto.repository.AccountRepository;
+import de.othr.sw.ksburhan.akaunto.entity.AccountDTO;
+import de.othr.sw.ksburhan.akaunto.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,22 +13,21 @@ import java.util.List;
 public class AccountController {
 
     @Autowired
-    private AccountRepository accountRepository;
+    private AccountService accountService;
 
     @GetMapping("/allAccounts")
     List<Account> all(){
-       return accountRepository.findAll();
+       return accountService.findAll();
     }
 
     @PostMapping("/registeraccount")
     Account newAccount(@RequestBody Account newAccount) {
-        return accountRepository.save(newAccount);
+        return accountService.save(newAccount);
     }
 
     @GetMapping("/account/{id}")
     Account one(@PathVariable long id) {
-        return accountRepository.findById(id)
-                .orElseThrow();
+        return accountService.findById(id);
     }
 
     @PutMapping("/account/{id}")
@@ -38,33 +35,28 @@ public class AccountController {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String encodedPassword = passwordEncoder.encode(newAccount.getPassword());
 
-        return accountRepository.findById(id)
-                .map(account -> {
-                    account.setUsername(newAccount.getUsername());
-                    account.setFirstName(newAccount.getFirstName());
-                    account.setLastName(newAccount.getLastName());
-                    account.setPassword(encodedPassword);
-                    return accountRepository.save(account);
-                })
-                .orElseGet(() -> {
-                    newAccount.setId(id);
-                    return accountRepository.save(newAccount);
-                });
+        Account account = accountService.findById(id);
+        account.setUsername(newAccount.getUsername());
+        account.setFirstName(newAccount.getFirstName());
+        account.setLastName(newAccount.getLastName());
+        account.setPassword(encodedPassword);
+
+        return accountService.save(account);
     }
 
     @DeleteMapping("/account/{id}")
     void deleteAccount(@PathVariable Long id) {
-        accountRepository.deleteById(id);
+        accountService.deleteById(id);
     }
 
     @GetMapping("/authenticate")
-    public Account authenticate(@RequestParam String username, @RequestParam String password) {
+    public AccountDTO authenticate(@RequestParam String username, @RequestParam String password) {
 
-        Account account = accountRepository.findByUsername(username);
+        Account account = accountService.findByUsername(username);
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
         if (passwordEncoder.matches(password, account.getPassword()))
-            return account;
+            return accountService.convertToDTO(account);
 
         return null;
     }

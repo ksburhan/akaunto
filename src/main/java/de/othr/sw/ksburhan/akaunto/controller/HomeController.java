@@ -4,9 +4,9 @@ import de.othr.sw.ksburhan.akaunto.entity.Account;
 import de.othr.sw.ksburhan.akaunto.entity.Advertisement;
 import de.othr.sw.ksburhan.akaunto.entity.CustomAccount;
 import de.othr.sw.ksburhan.akaunto.entity.Post;
-import de.othr.sw.ksburhan.akaunto.repository.AccountRepository;
-import de.othr.sw.ksburhan.akaunto.repository.AdvertisementRepository;
-import de.othr.sw.ksburhan.akaunto.repository.PostRepository;
+import de.othr.sw.ksburhan.akaunto.service.AccountService;
+import de.othr.sw.ksburhan.akaunto.service.AdvertisementService;
+import de.othr.sw.ksburhan.akaunto.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -24,13 +24,13 @@ import java.util.List;
 public class HomeController {
 
     @Autowired
-    private AccountRepository accountRepository;
+    private AccountService accountService;
 
     @Autowired
-    private PostRepository postRepository;
+    private PostService postService;
 
     @Autowired
-    private AdvertisementRepository advertisementRepository;
+    private AdvertisementService advertisementService;
 
     @GetMapping("/")
     public String showStartPage(Model model) {
@@ -39,7 +39,7 @@ public class HomeController {
 
     @RequestMapping("/accounts")
     public String prepareAccountPage(Model model) {
-        List<Account> allAccounts = accountRepository.findAll();
+        List<Account> allAccounts = accountService.findAll();
         model.addAttribute("allAccounts", allAccounts);
         return "accounts";
     }
@@ -69,7 +69,7 @@ public class HomeController {
         String encodedPassword = passwordEncoder.encode(account.getPassword());
         account.setPassword(encodedPassword);
 
-        accountRepository.save(account);
+        accountService.save(account);
 
         return "register_processed";
     }
@@ -77,18 +77,15 @@ public class HomeController {
     @RequestMapping("/home")
     public String prepareHomescreen(@AuthenticationPrincipal CustomAccount customAccount, Model model) {
 
-        Account account = accountRepository.findByUsername(customAccount.getUsername());
-        List<Post> allFollowedPosts = new ArrayList<>();
-        allFollowedPosts.addAll(account.getPosts());
-        for (Account followed : account.getFollowing()) {
-            allFollowedPosts.addAll(postRepository.findByAuthorID(followed));
-        }
-        allFollowedPosts.sort(Comparator.comparing(Post::getDate).reversed());
-        Advertisement ad = advertisementRepository.findByAdID(2L);
+        Account account = accountService.findByUsername(customAccount.getUsername());
+        List<Post> allFollowedPosts = postService.getAllFollowedPosts(account);
+        Advertisement ad = advertisementService.getAdforAccount(account);
+
         model.addAttribute("allFollowedPosts", allFollowedPosts);
         model.addAttribute("account", account);
         model.addAttribute("ad", ad);
         model.addAttribute("post", new Post());
+
         return "home";
     }
 }
