@@ -32,13 +32,6 @@ public class HomeController {
         return "index";
     }
 
-    @RequestMapping("/accounts")
-    public String prepareAccountPage(Model model) {
-        List<Account> allAccounts = accountService.findAll();
-        model.addAttribute("allAccounts", allAccounts);
-        return "accounts";
-    }
-
     @GetMapping("/register")
     public String prepareRegistrationPage(Model model) {
         model.addAttribute("account", new Account());
@@ -60,12 +53,8 @@ public class HomeController {
 
     @PostMapping("/process_register")
     public String register(Account account) {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String encodedPassword = passwordEncoder.encode(account.getPassword());
-        account.setPassword(encodedPassword);
-        account.setAccountData(new AccountData(account));
 
-        accountService.save(account);
+        accountService.createNewAccount(account);
 
         return "register_processed";
     }
@@ -73,12 +62,12 @@ public class HomeController {
     @RequestMapping("/home")
     public String prepareHomescreen(@AuthenticationPrincipal CustomAccount customAccount, Model model) {
 
-        Account account = accountService.findByUsername(customAccount.getUsername());
-        List<Post> allFollowedPosts = postService.getAllFollowedPosts(account);
-        Advertisement ad = advertisementService.getAdforAccount(account);
+        Account ownAccount = accountService.findByUsername(customAccount.getUsername());
+        List<Post> allFollowedPosts = postService.getAllFollowedPosts(ownAccount);
+        Advertisement ad = advertisementService.getAdforAccount(ownAccount);
 
         model.addAttribute("allFollowedPosts", allFollowedPosts);
-        model.addAttribute("account", account);
+        model.addAttribute("ownAccount", ownAccount);
         model.addAttribute("ad", ad);
         model.addAttribute("post", new Post());
 

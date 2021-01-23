@@ -9,22 +9,7 @@
 
     </head>
     <body>
-        <nav class="navbar navbar-expand-sm navbar-light" style="background-color: #e3f2fd;">
-            <a class="navbar-brand" th:href="@{/}">Akaunto</a>
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/register}">Register</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/login}">Log In</a>
-                </li>
-            </ul>
-            <form class="form-inline my-2 my-lg-0" th:action="@{/search}">
-                <input class="form-control mr-sm-2" type="search" name="searchparam" placeholder="Search for users"
-                       aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
-        </nav>
+        <nav th:insert="fragments/navbar.html :: navbarNotLoggedIn"> </nav>
         <div class="container text-center">
             <div>
                 <h1>Account Registration</h1>

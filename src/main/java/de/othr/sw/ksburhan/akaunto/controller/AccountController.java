@@ -2,6 +2,7 @@ package de.othr.sw.ksburhan.akaunto.controller;
 
 import de.othr.sw.ksburhan.akaunto.entity.Account;
 import de.othr.sw.ksburhan.akaunto.entity.AccountDTO;
+import de.othr.sw.ksburhan.akaunto.entity.AccountData;
 import de.othr.sw.ksburhan.akaunto.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -23,10 +24,8 @@ public class AccountController {
     @GetMapping("/registeraccount")
     AccountDTO newAccount(@RequestParam String username, @RequestParam String firstName,
                        @RequestParam String lastName, @RequestParam String password) {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         Account newAccount = new Account(username, password, firstName, lastName);
-        newAccount.setPassword(passwordEncoder.encode(newAccount.getPassword()));
-        accountService.save(newAccount);
+        newAccount = accountService.createNewAccount(newAccount);
         return accountService.convertToDTO(newAccount);
     }
 

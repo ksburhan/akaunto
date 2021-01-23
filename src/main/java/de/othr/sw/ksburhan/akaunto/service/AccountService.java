@@ -2,8 +2,10 @@ package de.othr.sw.ksburhan.akaunto.service;
 
 import de.othr.sw.ksburhan.akaunto.entity.Account;
 import de.othr.sw.ksburhan.akaunto.entity.AccountDTO;
+import de.othr.sw.ksburhan.akaunto.entity.AccountData;
 import de.othr.sw.ksburhan.akaunto.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,6 +46,16 @@ public class AccountService {
     @Transactional
     public void flush() {
         accountRepository.flush();
+    }
+
+    @Transactional
+    public Account createNewAccount(Account account){
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String encodedPassword = passwordEncoder.encode(account.getPassword());
+        account.setPassword(encodedPassword);
+        account.setAccountData(new AccountData(account));
+        save(account);
+        return account;
     }
 
     public List<Account> search(String s) {

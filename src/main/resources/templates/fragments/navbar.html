@@ -1,15 +1,30 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
     <head>
-        <meta charset="UTF-8">
-        <title>Akaunto</title>
+        <meta charset="UTF-8"/>
         <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css"/>
         <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
         <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
     </head>
     <body>
-        <nav th:if="${isLoggedIn} == false" th:insert="fragments/navbar.html :: navbarNotLoggedIn"> </nav>
-        <nav th:if="${isLoggedIn} == true" class="navbar navbar-expand-sm navbar-light"
+        <nav th:fragment="navbarNotLoggedIn" class="navbar navbar-expand-sm navbar-light"
+             style="background-color: #e3f2fd;">
+            <a class="navbar-brand" th:href="@{/}">Akaunto</a>
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/register}">Register</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/login}">Log In</a>
+                </li>
+            </ul>
+            <form class="form-inline my-2 my-lg-0" th:action="@{/search}">
+                <input class="form-control mr-sm-2" type="search" name="searchparam" placeholder="Search for users"
+                       aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </form>
+        </nav>
+        <nav th:fragment="navbarLoggedIn(ownAccount)" class="navbar navbar-expand-sm navbar-light"
              style="background-color: #e3f2fd;">
             <a class="navbar-brand">Akaunto</a>
             <ul class="navbar-nav mr-auto">
@@ -44,11 +59,5 @@
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
             </form>
         </nav>
-        <div class="container text-center">
-            <h1 th:text="${targetPost.id}" th:href="@{/p/{path}(path=${targetPost.id})}"></h1>
-            <h1 th:text="${targetPost.author.username}" th:href="@{/u/{path}(path=${targetPost.author.id})}"></h1>
-            <h1 th:text="${targetPost.content}"></h1>
-            <h1 th:text="${targetPost.date}"></h1>
-        </div>
     </body>
 </html>

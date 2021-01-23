@@ -137,8 +137,8 @@ public class ProfileController {
 
     @RequestMapping("/settings")
     public String prepareSettingscreen(@AuthenticationPrincipal CustomAccount customAccount, Model model) {
-        Account account = accountService.findByUsername(customAccount.getUsername());
-        model.addAttribute("account", account);
+        Account ownAccount = accountService.findByUsername(customAccount.getUsername());
+        model.addAttribute("ownAccount", ownAccount);
         model.addAttribute("checkPassword", "");
         return "settings";
     }

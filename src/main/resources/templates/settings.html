@@ -8,43 +8,12 @@
         <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
     </head>
     <body>
-        <nav class="navbar navbar-expand-sm navbar-light" style="background-color: #e3f2fd;">
-            <a class="navbar-brand">Akaunto</a>
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/home}">Home<span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/u/{path}(path=${account.username})}" th:text="${account.username}">asd</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown"
-                       aria-haspopup="true" aria-expanded="false">
-                        Manage
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" th:href="@{/u/{path}(path=${account.username})}">See your profile</a>
-                        <a class="dropdown-item" href="#">Settings</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item">
-                            <form th:action="@{/logout}" method="post">
-                                <input type="submit" class="btn btn-danger" value="Sign Out"/>
-                            </form>
-                        </a>
-                    </div>
-                </li>
-            </ul>
-            <form class="form-inline my-2 my-lg-0" th:action="@{/search}">
-                <input class="form-control mr-sm-2" type="search" name="searchparam" placeholder="Search for users"
-                       aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
-        </nav>
-        <form th:action="@{/process_settingschange}" th:object="${account}"
+        <nav th:insert="fragments/navbar.html :: navbarLoggedIn(${ownAccount})"> </nav>
+        <form th:action="@{/process_settingschange}" th:object="${ownAccount}"
               method="post" style="max-width: 600px; margin: 0 auto;">
             <div class="m-3">
                 <div class="form-group row">
-                    <label class="col-4 col-form-label" th:text="${'First Name: ' + account.firstName}">First
+                    <label class="col-4 col-form-label" th:text="${'First Name: ' + ownAccount.firstName}">First
                         Name: </label>
                     <div class="col-8">
                         <input type="text" th:field="*{firstName}" placeholder="New First Name" class="form-control"
@@ -52,7 +21,7 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-4 col-form-label" th:text="${'Last Name: ' + account.lastName}">Last
+                    <label class="col-4 col-form-label" th:text="${'Last Name: ' + ownAccount.lastName}">Last
                         Name: </label>
                     <div class="col-8">
                         <input type="text" th:field="*{lastName}" placeholder="New Last Name" class="form-control"
