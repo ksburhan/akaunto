@@ -67,7 +67,7 @@ public class AccountService {
     }
 
     public AccountDTO convertToDTO(Account account){
-        AccountDTO accountDTO = new AccountDTO(account.getUsername(), account.getFirstName(), account.getLastName());
+        AccountDTO accountDTO = new AccountDTO(account.getUsername(), account.getFirstName(), account.getLastName(), null);
         return accountDTO;
     }
 }

@@ -26,7 +26,9 @@ public class AccountController {
                        @RequestParam String lastName, @RequestParam String password) {
         Account newAccount = new Account(username, password, firstName, lastName);
         newAccount = accountService.createNewAccount(newAccount);
-        return accountService.convertToDTO(newAccount);
+        AccountDTO accountDTO = accountService.convertToDTO(newAccount);
+        accountDTO.setPassword(password);
+        return accountDTO;
     }
 
     @GetMapping("/account/{id}")
@@ -45,8 +47,11 @@ public class AccountController {
         Account account = accountService.findByUsername(username);
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-        if (passwordEncoder.matches(password, account.getPassword()))
-            return accountService.convertToDTO(account);
+        if (passwordEncoder.matches(password, account.getPassword())) {
+            AccountDTO accountDTO = accountService.convertToDTO(account);
+            accountDTO.setPassword(password);
+            return accountDTO;
+        }
 
         return null;
     }
