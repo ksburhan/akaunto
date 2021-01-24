@@ -28,6 +28,7 @@ public class AccountController {
         newAccount = accountService.createNewAccount(newAccount);
         AccountDTO accountDTO = accountService.convertToDTO(newAccount);
         accountDTO.setPassword(password);
+        accountDTO.setAuthenticated(true);
         return accountDTO;
     }
 
@@ -50,6 +51,7 @@ public class AccountController {
         if (passwordEncoder.matches(password, account.getPassword())) {
             AccountDTO accountDTO = accountService.convertToDTO(account);
             accountDTO.setPassword(password);
+            accountDTO.setAuthenticated(true);
             return accountDTO;
         }
 

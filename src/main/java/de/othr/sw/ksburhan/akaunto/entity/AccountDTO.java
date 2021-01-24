@@ -6,6 +6,7 @@ public class AccountDTO {
     private String firstName;
     private String lastName;
     private String password;
+    private boolean authenticated = false;
 
     public AccountDTO(String username, String firstName, String lastName, String password) {
         this.username = username;
@@ -44,5 +45,13 @@ public class AccountDTO {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public boolean isAuthenticated() {
+        return authenticated;
+    }
+
+    public void setAuthenticated(boolean authenticated) {
+        this.authenticated = authenticated;
     }
 }
