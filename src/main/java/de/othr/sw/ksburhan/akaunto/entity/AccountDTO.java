@@ -8,6 +8,9 @@ public class AccountDTO {
     private String password;
     private boolean authenticated = false;
 
+    public AccountDTO() {
+    }
+
     public AccountDTO(String username, String firstName, String lastName, String password) {
         this.username = username;
         this.firstName = firstName;

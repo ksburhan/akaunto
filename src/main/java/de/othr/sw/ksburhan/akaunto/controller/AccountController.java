@@ -54,7 +54,8 @@ public class AccountController {
             accountDTO.setAuthenticated(true);
             return accountDTO;
         }
-
-        return null;
+        AccountDTO accountDTO = new AccountDTO();
+        accountDTO.setAuthenticated(false);
+        return accountDTO;
     }
 }
