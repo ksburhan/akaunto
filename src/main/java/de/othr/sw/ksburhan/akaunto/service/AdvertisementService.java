@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Random;
+
 @Service
 public class AdvertisementService {
 
@@ -28,7 +31,17 @@ public class AdvertisementService {
 
 
     public Advertisement getAdforAccount(Account account) {
-        // TODO: Get good according to userdata
-        return findByAdID(2L);
+        List<Advertisement> matchingAds;
+        String favoriteSport;
+
+        if(account.getAccountData().getFavouriteSport() != null){
+            favoriteSport = account.getAccountData().getFavouriteSport();
+            matchingAds = advertisementRepository.findMatchingAd(favoriteSport);
+        }else{
+            matchingAds = advertisementRepository.findAll();
+        }
+        Random random = new Random();
+        int index = random.nextInt(matchingAds.size());
+        return matchingAds.get(index);
     }
 }

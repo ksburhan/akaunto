@@ -1,4 +1,4 @@
-package de.othr.sw.ksburhan.akaunto.entity;
+package de.othr.sw.ksburhan.akaunto.DTOs;
 
 public class AccountDTO {
 

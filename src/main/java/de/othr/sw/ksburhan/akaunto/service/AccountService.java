@@ -1,7 +1,7 @@
 package de.othr.sw.ksburhan.akaunto.service;
 
 import de.othr.sw.ksburhan.akaunto.entity.Account;
-import de.othr.sw.ksburhan.akaunto.entity.AccountDTO;
+import de.othr.sw.ksburhan.akaunto.DTOs.AccountDTO;
 import de.othr.sw.ksburhan.akaunto.entity.AccountData;
 import de.othr.sw.ksburhan.akaunto.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +50,9 @@ public class AccountService {
 
     @Transactional
     public Account createNewAccount(Account account){
+        if(accountRepository.findByUsername(account.getUsername()) != null){
+            return null;
+        }
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String encodedPassword = passwordEncoder.encode(account.getPassword());
         account.setPassword(encodedPassword);

@@ -1,49 +1,44 @@
 package de.othr.sw.ksburhan.akaunto.controller;
 
 import de.othr.sw.ksburhan.akaunto.entity.Account;
-import de.othr.sw.ksburhan.akaunto.entity.AccountDTO;
-import de.othr.sw.ksburhan.akaunto.entity.AccountData;
+import de.othr.sw.ksburhan.akaunto.DTOs.AccountDTO;
+import de.othr.sw.ksburhan.akaunto.entity.CustomAccount;
 import de.othr.sw.ksburhan.akaunto.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
+@RequestMapping("/api/")
 @RestController
 public class AccountController {
 
     @Autowired
     private AccountService accountService;
 
-    @GetMapping("/allAccounts")
-    List<Account> all(){
-       return accountService.findAll();
-    }
-
     @GetMapping("/registeraccount")
-    AccountDTO newAccount(@RequestParam String username, @RequestParam String firstName,
-                       @RequestParam String lastName, @RequestParam String password) {
+    public AccountDTO newAccount(@RequestParam String username, @RequestParam String firstName,
+                       @RequestParam String lastName, @RequestParam String password ,@AuthenticationPrincipal CustomAccount customAccount) {
+        if(!customAccount.getUsername().equals("vinzent"))
+            return null;
+
         Account newAccount = new Account(username, password, firstName, lastName);
         newAccount = accountService.createNewAccount(newAccount);
+        if(newAccount == null){
+            return new AccountDTO();
+        }
         AccountDTO accountDTO = accountService.convertToDTO(newAccount);
         accountDTO.setPassword(password);
         accountDTO.setAuthenticated(true);
         return accountDTO;
     }
 
-    @GetMapping("/account/{id}")
-    Account one(@PathVariable long id) {
-        return accountService.findById(id);
-    }
-
-    @DeleteMapping("/account/{id}")
-    void deleteAccount(@PathVariable Long id) {
-        accountService.deleteById(id);
-    }
-
     @GetMapping("/authenticate")
-    public AccountDTO authenticate(@RequestParam String username, @RequestParam String password) {
+    public AccountDTO authenticate(@RequestParam String username, @RequestParam String password,
+                                   @AuthenticationPrincipal CustomAccount customAccount) {
+
+        if(!customAccount.getUsername().equals("vinzent"))
+            return null;
 
         Account account = accountService.findByUsername(username);
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -54,8 +49,6 @@ public class AccountController {
             accountDTO.setAuthenticated(true);
             return accountDTO;
         }
-        AccountDTO accountDTO = new AccountDTO();
-        accountDTO.setAuthenticated(false);
-        return accountDTO;
+        return new AccountDTO();
     }
 }

@@ -1,46 +1,22 @@
-package de.othr.sw.ksburhan.akaunto.entity;
+package de.othr.sw.ksburhan.akaunto.DTOs;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import de.othr.sw.ksburhan.akaunto.entity.Account;
 
-import javax.persistence.*;
+import javax.persistence.Column;
 
-@Entity
-@Table(name = "account_data")
-public class AccountData {
+public class AccountDataDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "account_id", nullable = false)
     private Account account;
-
-    @Column(name = "favourite_sport")
     private String favouriteSport;
-
-    @Column(name = "hometown")
     private String hometown;
 
-    public AccountData() {
+    public AccountDataDTO() {
     }
 
-    public AccountData(Account account) {
-        this.account = account;
-    }
-
-    public AccountData(Account account, String favouriteSport, String hometown) {
-        this.account = account;
+    public AccountDataDTO(@JsonProperty String favouriteSport, @JsonProperty String hometown) {
         this.favouriteSport = favouriteSport;
         this.hometown = hometown;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public Account getAccount() {

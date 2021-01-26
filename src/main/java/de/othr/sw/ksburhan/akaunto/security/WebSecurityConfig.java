@@ -20,7 +20,7 @@ import org.springframework.security.web.authentication.ui.DefaultLoginPageGenera
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String[] AUTHENTICATION_NEEDED = {
-            "/home", "/settings", "/follow/**", "/unfollow/**"  };
+            "/api/**", "/home", "/settings", "/follow/**", "/unfollow/**"  };
 
     @Autowired
     private DataSource dataSource;
@@ -49,6 +49,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.authenticationProvider(authenticationProvider());
     }
 
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth)
+            throws Exception
+    {
+        auth.inMemoryAuthentication()
+                .withUser("vinzent")
+                .password("pw")
+                .roles("USER");
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -68,6 +78,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .permitAll()
                     .and()
                 .addFilterBefore(new LoginPageFilter(), DefaultLoginPageGeneratingFilter.class);
+
+        http
+                .httpBasic();
+
+        http
+                .cors()
+                .and()
+                .csrf()
+                .disable();
     }
 
 
