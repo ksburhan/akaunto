@@ -28,7 +28,7 @@ public class AccountDataService {
 
     public void getAccountDataFromBeachCourts(String username){
         try {
-            final String url = "http://localhost:8081/api/v1/user/advertisingInformation?username=" + username;
+            final String url = String.format("http://localhost:8959/api/v1/user/advertisingInformation?username=%s", username);
 
             RestTemplateBuilder restTemplateBuilder = new RestTemplateBuilder();
             RestTemplate restTemplate = restTemplateBuilder.basicAuthentication("burhan", "pw").build();
