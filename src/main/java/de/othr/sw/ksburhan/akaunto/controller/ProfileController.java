@@ -154,7 +154,7 @@ public class ProfileController {
 
         if (!passwordEncoder.matches(checkPassword, saveAccount.getPassword())) {
             System.out.println("password does not match");
-            model.addAttribute("account", saveAccount);
+            model.addAttribute("ownAccount", saveAccount);
             model.addAttribute("passwordError", true);
             return "settings";
         }
@@ -165,7 +165,7 @@ public class ProfileController {
 
         accountService.save(saveAccount);
 
-        model.addAttribute("account", saveAccount);
+        model.addAttribute("ownAccount", saveAccount);
         model.addAttribute("checkPassword", "");
         model.addAttribute("passwordSuccess", true);
         return "settings";

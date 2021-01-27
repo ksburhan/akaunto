@@ -38,31 +38,6 @@ public class TimelineController {
         return "redirect:/home";
     }
 
-    @RequestMapping("/p/{postID}")
-    public String preparePostPage(@AuthenticationPrincipal CustomAccount customAccount, Model model, @PathVariable long postID) {
-        Post targetPost = postService.findByPostID(postID);
-        Account ownAccount = null;
-
-        boolean isLoggedIn = false;
-
-        if (targetPost == null) {
-            return "error";
-        }
-
-        if (customAccount != null) {
-            isLoggedIn = true;
-            ownAccount = accountService.findByUsername(customAccount.getUsername());
-        }
-
-        targetPost.setAuthor(accountService.findByID(targetPost.getAuthor().getId()));
-
-        model.addAttribute("ownAccount", ownAccount);
-        model.addAttribute("isLoggedIn", isLoggedIn);
-        model.addAttribute("targetPost", targetPost);
-
-        return "post";
-    }
-
     @GetMapping("/ad/{adId}")
     public String redirectToAd(@PathVariable long adId) {
         Advertisement ad = advertisementService.findByAdID(adId);

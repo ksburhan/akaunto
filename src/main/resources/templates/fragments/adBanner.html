@@ -7,10 +7,10 @@
         <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
     </head>
     <body>
-        <footer th:fragment="adBanner(ad)" id="sticky-footer" class="py-4 bg-dark text-white-50 fixed-bottom">
+        <footer th:fragment="adBanner(ad)" id="sticky-footer" class="py-4 bg-dark text-white-50 fixed-bottom" style="height: 200px">
             <div class="container text-center">
                 <a th:href="@{/ad/{path}(path=${ad.id})}">
-                    <img th:src="${ad.getPictureUrl()}" height="50" width="1000">
+                    <img th:src="${ad.getPictureUrl()}" height="150" width="800">
                 </a>
             </div>
         </footer>

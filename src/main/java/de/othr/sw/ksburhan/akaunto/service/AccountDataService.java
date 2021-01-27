@@ -3,9 +3,9 @@ package de.othr.sw.ksburhan.akaunto.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.oth.beachCourts.DTOs.UserAdvertisingInformationDTO;
 import de.othr.sw.ksburhan.akaunto.entity.Account;
 import de.othr.sw.ksburhan.akaunto.entity.AccountData;
-import de.othr.sw.ksburhan.akaunto.DTOs.AccountDataDTO;
 import de.othr.sw.ksburhan.akaunto.repository.AccountDataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -33,12 +33,10 @@ public class AccountDataService {
             RestTemplateBuilder restTemplateBuilder = new RestTemplateBuilder();
             RestTemplate restTemplate = restTemplateBuilder.basicAuthentication("burhan", "pw").build();
             String result = restTemplate.getForObject(url, String.class);
-            Account account = accountService.findByUsername(username);
 
             ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            AccountDataDTO accountDataDTO = objectMapper.readValue(result, AccountDataDTO.class);
-            accountDataDTO.setAccount(account);
-            AccountData accountDataToSave = updateWithDTOData(accountDataDTO);
+            UserAdvertisingInformationDTO userAdvertisingInformationDTO = objectMapper.readValue(result, de.oth.beachCourts.DTOs.UserAdvertisingInformationDTO.class);
+            AccountData accountDataToSave = updateWithDTOData(userAdvertisingInformationDTO, username);
             save(accountDataToSave);
         } catch (HttpServerErrorException e){
             System.out.println("an error occurred trying to call the api");
@@ -54,10 +52,11 @@ public class AccountDataService {
         return accountDataRepository.save(accountData);
     }
 
-    public AccountData updateWithDTOData(AccountDataDTO accountDataDTO){
-        AccountData accountDataToSave = accountDataRepository.findByAccountID(accountDataDTO.getAccount());
-        accountDataToSave.setFavouriteSport(accountDataDTO.getFavouriteSport());
-        accountDataToSave.setHometown(accountDataDTO.getHometown());
+    public AccountData updateWithDTOData(de.oth.beachCourts.DTOs.UserAdvertisingInformationDTO userAdvertisingInformationDTO, String username){
+        Account account = accountService.findByUsername(username);
+        AccountData accountDataToSave = accountDataRepository.findByAccountID(account);
+        accountDataToSave.setFavouriteSport(userAdvertisingInformationDTO.getFavouriteSport());
+        accountDataToSave.setHometown(userAdvertisingInformationDTO.getHometown());
         return accountDataToSave;
     }
 

@@ -1,9 +1,11 @@
 package de.othr.sw.ksburhan.akaunto.service;
 
+import de.othr.sw.ksburhan.akaunto.beans.interfaces.AdScoreIF;
 import de.othr.sw.ksburhan.akaunto.entity.Account;
 import de.othr.sw.ksburhan.akaunto.entity.Advertisement;
 import de.othr.sw.ksburhan.akaunto.repository.AdvertisementRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,10 +16,12 @@ import java.util.Random;
 public class AdvertisementService {
 
     AdvertisementRepository advertisementRepository;
+    AdScoreIF adScoreIF;
 
     @Autowired
-    public AdvertisementService(AdvertisementRepository advertisementRepository) {
+    public AdvertisementService(AdvertisementRepository advertisementRepository, @Qualifier("AdScorePro") AdScoreIF adScoreIF) {
         this.advertisementRepository = advertisementRepository;
+        this.adScoreIF = adScoreIF;
     }
 
     public Advertisement findByAdID(long adId) {
